@@ -48,6 +48,38 @@ int main(int argc, char *argv[]) {
 
   }
 
+  else if(strcmp(argv[1], "r") == 0) {
+
+    size_t len = strlen("chmod +x ~/.local/share/uspm/repo/") + strlen(argv[2]) + strlen("/remove.sh") + 1;
+    char *command = (char *)malloc(len);
+
+    if (command == NULL) {
+        printf("Memory allocation failed.\n");
+        return 1;
+    }
+
+    sprintf(command, "chmod +x ~/.local/share/uspm/repo/%s/remove.sh", argv[2]);
+    printf("Granting remove script executable permission...\n");
+    system(command);
+
+    //-----//
+
+    len = strlen("~/.local/share/uspm/repo/") + strlen(argv[2]) + strlen("/remove.sh") + 1;
+    command = (char *)malloc(len);
+
+    if (command == NULL) {
+        printf("Memory allocation failed.\n");
+        return 1;
+    }
+
+    sprintf(command, "~/.local/share/uspm/repo/%s/remove.sh", argv[2]);
+    printf("Removing package...\n");
+    system(command);
+
+    free(command);
+
+  }
+
   return 0;
 
 }
