@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main(int argc, char *argv[]) {
+
+  if(strcmp(argv[1], "i") == 0) {
+
+    size_t len = strlen("chmod +x ~/.local/share/uspm/repo/") + strlen(argv[2]) + strlen("/install.sh") + 1;
+    char *command = (char *)malloc(len);
+
+    if (command == NULL) {
+        printf("Memory allocation failed.\n");
+        return 1;
+    }
+
+    sprintf(command, "chmod +x ~/.local/share/uspm/repo/%s/install.sh", argv[2]);
+    printf("Granting install script executable permission...\n");
+    system(command);
+
+    //--------//
+
+    len = strlen("~/.local/share/uspm/repo/") + strlen(argv[2]) + strlen("/install.sh") + 1;
+    command = (char *)malloc(len);
+
+    if (command == NULL) {
+        printf("Memory allocation failed.\n");
+        return 1;
+    }
+
+    sprintf(command, "~/.local/share/uspm/repo/%s/install.sh", argv[2]);
+    printf("Installing package...\n");
+    system(command);
+
+    free(command);
+
+  }
+
+  else if(strcmp(argv[1], "u") == 0) {
+
+    //printf("Granting install scripts executable permission...\n");
+    //system("chmod +x ~/.local/share/uspm/repo/*/install.sh");
+
+    //--------//
+
+    printf("Updating Packages...\n");
+    system("~/.local/share/uspm/repo/*/install.sh");
+
+  }
+
+  return 0;
+
+}
