@@ -4,79 +4,86 @@
 
 int main(int argc, char *argv[]) {
 
-  if(strcmp(argv[1], "i") == 0) {
+  if(argc < 2) {
+    system("chmod +x ~/.local/share/uspm/repo/uspm/help.sh");
+    system("~/.local/share/uspm/repo/uspm/help.sh");
+  } else {
 
-    size_t len = strlen("chmod +x ~/.local/share/uspm/repo/") + strlen(argv[2]) + strlen("/install.sh") + 1;
-    char *command = (char *)malloc(len);
+    if(strcmp(argv[1], "i") == 0) {
 
-    if (command == NULL) {
+      size_t len = strlen("chmod +x ~/.local/share/uspm/repo/") + strlen(argv[2]) + strlen("/install.sh") + 1;
+      char *command = (char *)malloc(len);
+
+      if (command == NULL) {
         printf("Memory allocation failed.\n");
         return 1;
-    }
+      }
 
-    sprintf(command, "chmod +x ~/.local/share/uspm/repo/%s/install.sh", argv[2]);
-    printf("Granting install script executable permission...\n");
-    system(command);
+      sprintf(command, "chmod +x ~/.local/share/uspm/repo/%s/install.sh", argv[2]);
+      printf("Granting install script executable permission...\n");
+      system(command);
 
-    //--------//
+      //--------//
 
-    len = strlen("~/.local/share/uspm/repo/") + strlen(argv[2]) + strlen("/install.sh") + 1;
-    command = (char *)malloc(len);
+      len = strlen("~/.local/share/uspm/repo/") + strlen(argv[2]) + strlen("/install.sh") + 1;
+      command = (char *)malloc(len);
 
-    if (command == NULL) {
+      if (command == NULL) {
         printf("Memory allocation failed.\n");
         return 1;
+      }
+
+      sprintf(command, "~/.local/share/uspm/repo/%s/install.sh", argv[2]);
+      printf("Installing package...\n");
+      system(command);
+
+      free(command);
+
     }
 
-    sprintf(command, "~/.local/share/uspm/repo/%s/install.sh", argv[2]);
-    printf("Installing package...\n");
-    system(command);
+    else if(strcmp(argv[1], "u") == 0) {
 
-    free(command);
+      //printf("Granting install scripts executable permission...\n");
+      //system("chmod +x ~/.local/share/uspm/repo/*/install.sh");
 
-  }
+      //--------//
 
-  else if(strcmp(argv[1], "u") == 0) {
+      printf("Updating Packages...\n");
+      system("~/.local/share/uspm/repo/*/install.sh");
 
-    //printf("Granting install scripts executable permission...\n");
-    //system("chmod +x ~/.local/share/uspm/repo/*/install.sh");
+    }
 
-    //--------//
+    else if(strcmp(argv[1], "r") == 0) {
 
-    printf("Updating Packages...\n");
-    system("~/.local/share/uspm/repo/*/install.sh");
+      size_t len = strlen("chmod +x ~/.local/share/uspm/repo/") + strlen(argv[2]) + strlen("/remove.sh") + 1;
+      char *command = (char *)malloc(len);
 
-  }
-
-  else if(strcmp(argv[1], "r") == 0) {
-
-    size_t len = strlen("chmod +x ~/.local/share/uspm/repo/") + strlen(argv[2]) + strlen("/remove.sh") + 1;
-    char *command = (char *)malloc(len);
-
-    if (command == NULL) {
+      if (command == NULL) {
         printf("Memory allocation failed.\n");
         return 1;
-    }
+      }
 
-    sprintf(command, "chmod +x ~/.local/share/uspm/repo/%s/remove.sh", argv[2]);
-    printf("Granting remove script executable permission...\n");
-    system(command);
+      sprintf(command, "chmod +x ~/.local/share/uspm/repo/%s/remove.sh", argv[2]);
+      printf("Granting remove script executable permission...\n");
+      system(command);
 
-    //-----//
+      //-----//
 
-    len = strlen("~/.local/share/uspm/repo/") + strlen(argv[2]) + strlen("/remove.sh") + 1;
-    command = (char *)malloc(len);
+      len = strlen("~/.local/share/uspm/repo/") + strlen(argv[2]) + strlen("/remove.sh") + 1;
+      command = (char *)malloc(len);
 
-    if (command == NULL) {
+      if (command == NULL) {
         printf("Memory allocation failed.\n");
         return 1;
+      }
+
+      sprintf(command, "~/.local/share/uspm/repo/%s/remove.sh", argv[2]);
+      printf("Removing package...\n");
+      system(command);
+
+      free(command);
+
     }
-
-    sprintf(command, "~/.local/share/uspm/repo/%s/remove.sh", argv[2]);
-    printf("Removing package...\n");
-    system(command);
-
-    free(command);
 
   }
 
