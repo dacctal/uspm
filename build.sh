@@ -1,4 +1,6 @@
 #!/bin/bash
 gcc main.c -o uspm
 cp -r ./repo ~/.local/share/uspm/
-mkdir ~/.local/share/uspm/bin/
+if ! [ -d "~/.local/share/uspm/bin/" ]; then
+  mkdir ~/.local/share/uspm/bin/
+fi
