@@ -1,3 +1,5 @@
+#!/bin/sh
+
 echo "uspm: universal source-based package manager
 Usage:
   i [PACKAGE-NAME] - install a package
