@@ -3,6 +3,8 @@
 Working with uspm should be a breeze, as just typing `uspm` gives you all of its functionality in a concise and readable format.
 
 Each command is very simple, and should be very easy to type (yes, this is a feature)
+
+If you're looking for a package, you can look for it in the `repo` directory.
 ## Install
 Run this command to install uspm:
 ```
