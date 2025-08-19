@@ -3,15 +3,21 @@
 Package="wayland"
 Sources="$HOME/.local/share/uspm/sources/$Package"
 Bin="$HOME/.local/share/uspm/bin/$Package"
-Clone="https://gitlab.freedesktop.org/wayland/wayland"
 
 rm -rf "$Bin"
 rm -rf "$Sources"
 
-git clone "$Clone" "$Sources"
+git clone https://gitlab.freedesktop.org/wayland/wayland.git "$Sources"
+git clone https://gitlab.freedesktop.org/wayland/wayland-protocols.git "$Sources"/wayland-protocols
 cd "$Sources"
 
-meson build/ --prefix="$Bin"
-ninja -C build/ install
+meson setup builddir --prefix="$Sources"
+ninja -C builddir
+ninja -C builddir install
+
+cd wayland-protocols
+meson setup builddir --prefix="$Sources"
+ninja -C builddir
+ninja -C builddir install
 
 cd -
