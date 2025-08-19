@@ -18,5 +18,5 @@ curl https://raw.githubusercontent.com/dacctal/uspm/refs/heads/main/repo/uspm/in
 
 Then, add the bin folder to your `$PATH`:
 ```
-PATH=$PATH:~/.local/share/uspm/bin/ >> ~/.profile && source ~/.profile
+echo PATH=$PATH:~/.local/share/uspm/bin/ >> ~/.profile && source ~/.profile
 ```

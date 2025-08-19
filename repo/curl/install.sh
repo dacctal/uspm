@@ -1,5 +1,9 @@
 #!/bin/sh
 
+if ! [ -f "~/.local/share/uspm/bin/docker" ]; then
+  ~/.local/share/uspm/repo/docker/install.sh
+fi
+
 Package="curl"
 Sources="$HOME/.local/share/uspm/sources/$Package"
 Bin="$HOME/.local/share/uspm/bin/$Package"
