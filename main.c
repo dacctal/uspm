@@ -37,30 +37,11 @@ int main(int argc, char *argv[]) {
       printf("Installing package...\n");
       system(command);
 
-      //--------//
-
-      len = strlen("echo \"") + strlen(argv[2]) + strlen("\" >> ~/.local/share/uspm/repo/pkgs") + 1;
-      command = (char *)malloc(len);
-
-      if (command == NULL) {
-        printf("Memory allocation failed.\n");
-        return 1;
-      }
-
-      sprintf(command, "echo \"%s\" >> ~/.local/share/uspm/repo/pkgs", argv[2]);
-      printf("Installing package...\n");
-      system(command);
-
       free(command);
 
     }
 
     else if(strcmp(argv[1], "u") == 0) {
-
-      //printf("Granting install scripts executable permission...\n");
-      //system("chmod +x ~/.local/share/uspm/repo/*/install.sh");
-
-      //--------//
 
       printf("Granting update script executable permission...\n");
       system("chmod +x ~/.local/share/uspm/repo/uspm/update.sh");
@@ -97,19 +78,6 @@ int main(int argc, char *argv[]) {
 
       sprintf(command, "~/.local/share/uspm/repo/%s/remove.sh", argv[2]);
       printf("Removing package: %s\n", argv[2]);
-      system(command);
-
-      //--remove package name from pkgs file--//
-
-      len = strlen("sed -i \'/") + strlen(argv[2]) + strlen("/d\' ~/.local/share/uspm/repo/pkgs") + 1;
-      command = (char *)malloc(len);
-
-      if (command == NULL) {
-        printf("Memory allocation failed.\n");
-        return 1;
-      }
-
-      sprintf(command, "sed -i \'/%s/d\' ~/.local/share/uspm/repo/pkgs", argv[2]);
       system(command);
 
       free(command);
