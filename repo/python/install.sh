@@ -2,7 +2,7 @@
 
 Package="python"
 Sources="$HOME/.local/share/uspm/sources/$Package"
-Bin="$HOME/.local/share/uspm/bin/$Package"
+Bin="$HOME/.local/share/uspm/bin/"
 Clone="https://github.com/python/cpython.git"
 
 rm -rf "$Sources"

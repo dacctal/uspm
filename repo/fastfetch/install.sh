@@ -2,7 +2,7 @@
 
 Package="fastfetch"
 Sources="$HOME/.local/share/uspm/sources/$Package"
-Bin="$HOME/.local/share/uspm/bin/$Package"
+Bin="$HOME/.local/share/uspm/bin/"
 Clone="https://github.com/fastfetch-cli/fastfetch.git"
 
 rm -rf $Sources

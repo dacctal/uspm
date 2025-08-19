@@ -2,7 +2,7 @@
 
 Package="unimatrix"
 Sources="$HOME/.local/share/uspm/sources/$Package"
-Bin="$HOME/.local/share/uspm/bin/$Package"
+Bin="$HOME/.local/share/uspm/bin/"
 
 if ! [ -f "~/.local/share/uspm/bin/curl" ]; then
   ~/.local/share/uspm/repo/curl/install.sh

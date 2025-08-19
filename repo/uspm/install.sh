@@ -2,7 +2,7 @@
 
 Package="uspm"
 Sources="$HOME/.local/share/uspm/sources/$Package"
-Bin="$HOME/.local/share/uspm/bin/$Package"
+Bin="$HOME/.local/share/uspm/bin/"
 Clone="https://github.com/dacctal/uspm.git"
 
 rm -rf "$Sources"

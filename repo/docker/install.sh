@@ -2,7 +2,7 @@
 
 Package="docker"
 Sources="$HOME/.local/share/uspm/sources/$Package"
-Bin="$HOME/.local/share/uspm/bin/$Package"
+Bin="$HOME/.local/share/uspm/bin/"
 
 rm -rf "$Sources"
 

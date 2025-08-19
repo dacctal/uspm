@@ -2,7 +2,7 @@
 
 Package="cairo"
 Sources="$HOME/.local/share/uspm/sources/$Package"
-Bin="$HOME/.local/share/uspm/bin/$Package"
+Bin="$HOME/.local/share/uspm/bin/"
 Clone="git://anongit.freedesktop.org/git/cairo"
 Clone2="git://anongit.freedesktop.org/git/pixman.git"
 
