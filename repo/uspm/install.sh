@@ -1,11 +1,17 @@
 #!/bin/sh
 
-rm -rf ~/.local/share/uspm/sources/uspm/
+Package="uspm"
+Sources="$HOME/.local/share/uspm/sources/$Package"
+Bin="$HOME/.local/share/uspm/bin/$Package"
+Clone="https://github.com/dacctal/uspm.git"
 
-git clone https://github.com/dacctal/uspm.git ~/.local/share/uspm/sources/uspm/
-cd ~/.local/share/uspm/sources/uspm/
+rm -rf "$Sources"
+
+git clone "$Clone" "$Sources"
+cd "$Sources" || exit
 
 ./build.sh
-cp uspm ~/.local/share/uspm/bin/uspm
+mkdir -p "$(dirname "$Bin")"
+cp uspm "$Bin"
 
-cd -
+cd - || exit

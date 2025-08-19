@@ -1,16 +1,21 @@
 #!/bin/sh
 
-rm -rf ~/.local/share/uspm/sources/fastfetch/
+Package="fastfetch"
+Sources="$HOME/.local/share/uspm/sources/$Package"
+Bin="$HOME/.local/share/uspm/bin/$Package"
+Clone="https://github.com/fastfetch-cli/fastfetch.git"
 
-git clone https://github.com/fastfetch-cli/fastfetch.git ~/.local/share/uspm/sources/fastfetch/
-cd ~/.local/share/uspm/sources/fastfetch/
+rm -rf $Sources
+
+git clone "$Clone" "$Sources"
+cd "$Sources"
 
 mkdir -p build
 cd build
 
 cmake ..
 cmake --build . --target fastfetch
-sudo cp fastfetch ~/.local/share/uspm/bin/
+sudo cp fastfetch "$Bin"
 
 cd -
 cd -

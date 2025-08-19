@@ -1,11 +1,17 @@
 #!/bin/sh
 
-rm -rf ~/.local/share/uspm/sources/wayland
+Package="wayland"
+Sources="$HOME/.local/share/uspm/sources/$Package"
+Bin="$HOME/.local/share/uspm/bin/$Package"
+Clone="https://gitlab.freedesktop.org/wayland/wayland"
 
-git clone https://gitlab.freedesktop.org/wayland/wayland ~/.local/share/uspm/sources/wayland
-cd ~/.local/share/uspm/sources/wayland
+rm -rf "$Bin"
+rm -rf "$Sources"
 
-meson build/ --prefix=~/.local/share/uspm/bin/wayland/
+git clone "$Clone" "$Sources"
+cd "$Sources"
+
+meson build/ --prefix="$Bin"
 ninja -C build/ install
 
 cd -

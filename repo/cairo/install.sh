@@ -1,16 +1,23 @@
 #!/bin/sh
 
-if ! [ -f "~/.local/share/uspm/bin/rust" ]; then
-  ~/.local/share/uspm/repo/rust/install.sh
-fi
+Package="cairo"
+Sources="$HOME/.local/share/uspm/sources/$Package"
+Bin="$HOME/.local/share/uspm/bin/$Package"
+Clone="git://anongit.freedesktop.org/git/cairo"
+Clone2="git://anongit.freedesktop.org/git/pixman.git"
 
-rm -rf ~/.local/share/uspm/sources/cairo/
+rm -rf "$Sources"
 
-git clone https://github.com/starkware-libs/cairo.git ~/.local/share/uspm/sources/cairo/
-cd ~/.local/share/uspm/sources/cairo/
+git clone "$Clone" "$Sources"
+git clone "$Clone2" "$Sources"
+cd "$Sources" || exit
 
-rustup override set stable rustup update
-cargo test
-cargo run --bin cairo-compile -- --single-file /path/to/input.cairo /path/to/output.sierra --replace-ids
+meson setup $Sources/build
+ninja -C $Sources/build
+ninja -C $Sources/build install
+mkdir -p "$(dirname "$Bin")"
 
-cd -
+sudo cp /usr/local/bin/cairo-trace ~/.local/share/uspm/bin/
+sudo cp /usr/bin/cairo-trace ~/.local/share/uspm/bin/
+
+cd - || exit

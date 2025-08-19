@@ -1,4 +1,8 @@
 #!/bin/sh
 
-rm -rf ~/.local/share/uspm/sources/yad
-rm -rf ~/.local/share/uspm/bin/yad
+Package="yad"
+Sources="$HOME/.local/share/uspm/sources/$Package"
+Bin="$HOME/.local/share/uspm/bin/$Package"
+
+rm -rf "$Bin"
+rm -rf "$Sources"

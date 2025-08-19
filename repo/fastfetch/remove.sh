@@ -1,4 +1,8 @@
 #!/bin/sh
 
-rm -rf ~/.local/share/uspm/bin/fastfetch
-rm -rf ~/.local/share/uspm/sources/fastfetch
+Package="fastfetch"
+Sources="$HOME/.local/share/uspm/sources/$Package"
+Bin="$HOME/.local/share/uspm/bin/$Package"
+
+rm -rf "$Bin"
+rm -rf "$Sources"

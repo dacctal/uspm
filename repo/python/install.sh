@@ -1,11 +1,18 @@
 #!/bin/sh
 
-rm -rf ~/.local/share/uspm/sources/python/
+Package="python"
+Sources="$HOME/.local/share/uspm/sources/$Package"
+Bin="$HOME/.local/share/uspm/bin/$Package"
+Clone="https://github.com/python/cpython.git"
 
-git clone https://github.com/python/cpython.git ~/.local/share/uspm/sources/python/
-cd ~/.local/share/uspm/sources/python/
+rm -rf "$Sources"
 
-./configure make make test
+git clone "$Clone" "$Sources"
+cd "$Sources" || exit
+
+./configure
+make
+make test
 sudo make install
 
 sudo mv /usr/local/bin/idle* ~/.local/share/uspm/bin/

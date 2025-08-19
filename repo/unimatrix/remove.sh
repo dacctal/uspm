@@ -1,6 +1,6 @@
 #!/bin/sh
 
-Package="pipes.sh"
+Package="unimatrix"
 Sources="$HOME/.local/share/uspm/sources/$Package"
 Bin="$HOME/.local/share/uspm/bin/$Package"
 

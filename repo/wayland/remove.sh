@@ -1,4 +1,8 @@
 #!/bin/sh
 
-rm -rf ~/.local/share/uspm/sources/wayland
-rm -rf ~/.local/share/uspm/bin/wayland
+Package="wayland"
+Sources="$HOME/.local/share/uspm/sources/$Package"
+Bin="$HOME/.local/share/uspm/bin/$Package"
+
+rm -rf "$Bin"
+rm -rf "$Sources"

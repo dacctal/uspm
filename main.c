@@ -110,7 +110,6 @@ int main(int argc, char *argv[]) {
       }
 
       sprintf(command, "sed -i \'/%s/d\' ~/.local/share/uspm/repo/pkgs", argv[2]);
-      printf(command, "sed -i \'/%s/d\' ~/.local/share/uspm/repo/pkgs", argv[2]);
       system(command);
 
       free(command);

@@ -1,9 +1,14 @@
 #!/bin/sh
 
-rm -rf ~/.local/share/uspm/sources/curl/
+Package="curl"
+Sources="$HOME/.local/share/uspm/sources/$Package"
+Bin="$HOME/.local/share/uspm/bin/$Package"
+Clone="https://github.com/stunnel/static-curl.git"
 
-git clone https://github.com/stunnel/static-curl.git ~/.local/share/uspm/sources/curl/
-cd ~/.local/share/uspm/sources/curl/
+rm -rf "$Sources"
+
+git clone "$Clone" "$Sources"
+cd "$Sources"
 
 chmod +x curl-static-cross.sh
 sh curl-static-cross.sh

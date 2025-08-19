@@ -1,11 +1,16 @@
 #!/bin/sh
 
-rm -rf ~/.local/share/uspm/sources/pipes.sh/
+Package="pipes.sh"
+Sources="$HOME/.local/share/uspm/sources/$Package"
+Bin="$HOME/.local/share/uspm/bin/$Package"
+Clone="https://github.com/pipeseroni/pipes.sh.git"
 
-git clone https://github.com/pipeseroni/pipes.sh.git ~/.local/share/uspm/sources/pipes.sh/
-cd ~/.local/share/uspm/sources/pipes.sh/
+rm -rf $Sources
 
-make PREFIX=$HOME/.local/share/uspm/sources/pipes.sh/ install
+git clone "$Clone" "$Sources"
+cd "$Sources" || exit
+
+make PREFIX=$Sources install
 cp pipes.sh ~/.local/share/uspm/bin/pipes.sh
 
 cd -
