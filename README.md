@@ -16,7 +16,7 @@ Run this command to install uspm:
 curl https://raw.githubusercontent.com/dacctal/uspm/refs/heads/main/repo/uspm/install.sh | sh
 ```
 
-Then, add the bin folder to your `$PATH`:
+This script tries to add uspm to your `$PATH` using `~/.profile`. Make sure it's sourced in your shell's config (examples: `.bashrc`, `.zshrc`):
 ```
-echo PATH=$PATH:~/.local/share/uspm/bin/ >> ~/.profile && source ~/.profile
+source ~/.profile
 ```
