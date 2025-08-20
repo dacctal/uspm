@@ -43,3 +43,17 @@ cd -
 mkdir -p ~/.local/share/applications
 ln -s ~/.local/share/uspm/bin/applications/"$Package".desktop \
   ~/.local/share/applications/
+
+echo "
+--- IMPORTANT ---
+
+This app's .desktop file is
+installed in a custom location.
+
+To make your app launcher
+recognize this location, you
+need to add the following
+into ~/.profile
+
+export XDG_DATA_DIRS="\$XDG_DATA_DIRS:\$HOME/.local/share/uspm/bin/"
+"

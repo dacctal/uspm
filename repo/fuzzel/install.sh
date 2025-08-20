@@ -29,5 +29,33 @@ ninja install
 
 cp fuzzel "$Bin"
 
+echo "[Desktop Entry]
+Name=Fuzzel
+Comment=Fuzzel app launcher
+Exec=/home/dacc/.local/share/uspm/bin/fuzzel
+Terminal=false
+Type=Application
+Categories=App Launcher;
+" >>"$Bin"/applications/"$Package".desktop
+chmod +x "$Bin"/applications/"$Package".desktop
+
 cd -
 cd -
+
+mkdir -p ~/.local/share/applications
+ln -s ~/.local/share/uspm/bin/applications/"$Package".desktop \
+  ~/.local/share/applications/
+
+echo "
+--- IMPORTANT ---
+
+This app's .desktop file is
+installed in a custom location.
+
+To make your app launcher
+recognize this location, you
+need to add the following
+into ~/.profile
+
+export XDG_DATA_DIRS="\$XDG_DATA_DIRS:\$HOME/.local/share/uspm/bin/"
+"
