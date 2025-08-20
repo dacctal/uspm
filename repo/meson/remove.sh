@@ -1,8 +1,8 @@
 #!/bin/sh
 
-Package="docker"
+Package="meson"
 Sources="$HOME/.local/share/uspm/sources/$Package"
 Bin="$HOME/.local/share/uspm/bin"
 
-rm -rf "$Bin"/containerd* "$Bin"/runc
-rm -rf "$Sources"
+sudo rm -rf "$Bin"/meson
+sudo rm -rf "$Sources"

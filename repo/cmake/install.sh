@@ -1,6 +1,6 @@
 #!/bin/sh
 
-Dependencies=("curl")
+Dependencies=("make")
 
 for Dep in ${Dependencies[@]}; do
   if ! [ -f "$HOME/.local/share/uspm/bin/$Dep" ]; then
@@ -11,11 +11,18 @@ for Dep in ${Dependencies[@]}; do
   fi
 done
 
-Package="unimatrix"
+Package="cmake"
 Sources="$HOME/.local/share/uspm/sources/$Package"
-Bin="$HOME/.local/share/uspm/bin/$Package"
+Bin="$HOME/.local/share/uspm/bin/"
+Clone="https://gitlab.kitware.com/cmake/cmake.git"
 
-rm -rf $Sources
+rm -rf "$Sources"
 
-curl -L https://raw.githubusercontent.com/will8211/unimatrix/master/unimatrix.py -o $Bin
-chmod a+rx $Bin
+git clone "$Clone" "$Sources"
+cd "$Sources"
+
+mkdir build && cd build
+../bootstrap && make
+
+cd -
+cd -

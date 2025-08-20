@@ -1,6 +1,6 @@
 #!/bin/sh
 
-Dependencies=("curl")
+Dependencies=("")
 
 for Dep in ${Dependencies[@]}; do
   if ! [ -f "$HOME/.local/share/uspm/bin/$Dep" ]; then
@@ -11,11 +11,24 @@ for Dep in ${Dependencies[@]}; do
   fi
 done
 
-Package="unimatrix"
+Package="make"
 Sources="$HOME/.local/share/uspm/sources/$Package"
-Bin="$HOME/.local/share/uspm/bin/$Package"
+Bin="$HOME/.local/share/uspm/bin/"
 
-rm -rf $Sources
+rm -rf "$Sources"
 
-curl -L https://raw.githubusercontent.com/will8211/unimatrix/master/unimatrix.py -o $Bin
-chmod a+rx $Bin
+mkdir "$Sources"
+cd "$Sources"
+wget https://ftp.gnu.org/gnu/make/make-4.4.1.tar.gz
+
+mkdir make
+tar -xvzf make*.tar.gz -C make --strip-components=1
+cd make
+
+./configure
+./build.sh
+
+cp make "$Bin"
+
+cd -
+cd -

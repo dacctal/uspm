@@ -1,6 +1,6 @@
 #!/bin/sh
 
-Dependencies=("curl")
+Dependencies=("python")
 
 for Dep in ${Dependencies[@]}; do
   if ! [ -f "$HOME/.local/share/uspm/bin/$Dep" ]; then
@@ -11,11 +11,17 @@ for Dep in ${Dependencies[@]}; do
   fi
 done
 
-Package="unimatrix"
+Package="meson"
 Sources="$HOME/.local/share/uspm/sources/$Package"
-Bin="$HOME/.local/share/uspm/bin/$Package"
+Bin="$HOME/.local/share/uspm/bin/"
+Clone="https://github.com/mesonbuild/meson.git"
 
-rm -rf $Sources
+rm -rf "$Sources"
 
-curl -L https://raw.githubusercontent.com/will8211/unimatrix/master/unimatrix.py -o $Bin
-chmod a+rx $Bin
+git clone "$Clone" "$Sources"
+cd "$Sources"
+
+python3 -m pip install --prefix="$Sources" .
+cp "$Sources"/bin/meson "$Bin"
+
+cd -

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-Dependencies=("ninja" "meson")
+Dependencies=("python")
 
 for Dep in ${Dependencies[@]}; do
   if ! [ -f "$HOME/.local/share/uspm/bin/$Dep" ]; then
@@ -11,23 +11,21 @@ for Dep in ${Dependencies[@]}; do
   fi
 done
 
-Package="fuzzel"
+Package="ninja"
 Sources="$HOME/.local/share/uspm/sources/$Package"
 Bin="$HOME/.local/share/uspm/bin/"
-Clone="https://codeberg.org/dnkl/fuzzel.git"
+Clone="https://github.com/ninja-build/ninja.git"
 
-rm -rf $Sources
+rm -rf "$Sources"
 
 git clone "$Clone" "$Sources"
 cd "$Sources"
 
-mkdir -p bld/release && cd bld/release
-meson --buildtype=release --prefix="$Sources" \
-  ../..
-ninja
-ninja install
+git checkout release
+cat README.md
+python3 configure.py
+cmake -Bbuild-cmake -DBUILD_TESTING=OFF
+cmake --build build-cmake
+cp build-cmake/ninja "$Bin"
 
-cp fuzzel "$Bin"
-
-cd -
 cd -

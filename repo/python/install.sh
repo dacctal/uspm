@@ -1,5 +1,16 @@
 #!/bin/sh
 
+Dependencies=("make")
+
+for Dep in ${Dependencies[@]}; do
+  if ! [ -f "$HOME/.local/share/uspm/bin/$Dep" ]; then
+    chmod +x ~/.local/share/uspm/repo/$Dep/install.sh
+    ~/.local/share/uspm/repo/$Dep/install.sh
+  else
+    echo "$Dep already installed"
+  fi
+done
+
 Package="python"
 Sources="$HOME/.local/share/uspm/sources/$Package"
 Bin="$HOME/.local/share/uspm/bin/"
@@ -10,14 +21,11 @@ rm -rf "$Sources"
 git clone "$Clone" "$Sources"
 cd "$Sources" || exit
 
-./configure
-make
-make test
-sudo make install
+./configure --prefix="$Sources"/build
+make -j$(nproc)
+make install
 
-sudo mv /usr/local/bin/idle* ~/.local/share/uspm/bin/
-sudo mv /usr/local/bin/pip* ~/.local/share/uspm/bin/
-sudo mv /usr/local/bin/pydoc* ~/.local/share/uspm/bin/
-sudo mv /usr/local/bin/python* ~/.local/share/uspm/bin/
+cp python "$Bin"
+cp build/bin/* "$Bin"
 
 cd -

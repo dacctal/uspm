@@ -1,8 +1,15 @@
 #!/bin/sh
 
-if ! [ -f "~/.local/share/uspm/bin/docker" ]; then
-  ~/.local/share/uspm/repo/docker/install.sh
-fi
+Dependencies=("docker")
+
+for Dep in ${Dependencies[@]}; do
+  if ! [ -f "$HOME/.local/share/uspm/bin/$Dep" ]; then
+    chmod +x ~/.local/share/uspm/repo/$Dep/install.sh
+    ~/.local/share/uspm/repo/$Dep/install.sh
+  else
+    echo "$Dep already installed"
+  fi
+done
 
 Package="curl"
 Sources="$HOME/.local/share/uspm/sources/$Package"
