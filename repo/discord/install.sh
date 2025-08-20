@@ -15,6 +15,6 @@ echo "#!/bin/sh
 ~/.local/share/uspm/sources/discord/Discord/Discord" >>discord
 chmod +x discord
 cp discord "$Bin"
-cp . /opt/discord
+sudo cp -r . /opt/discord
 
 cd -
