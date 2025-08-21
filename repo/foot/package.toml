@@ -1,0 +1,4 @@
+version = "9.0.1-rc3"
+source = "https://codeberg.org/dnkl/foot"
+description = "Fast, lightweight and minimalistic Wayland terminal emulator"
+license = "MIT" 

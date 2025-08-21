@@ -1,0 +1,4 @@
+version = "9.0.1-rc3"
+source = "https://git.savannah.gnu.org/git/make.git"
+description = "Low Level Virtual Machine"
+license = "Apache-2.0-with-LLVM-exceptions UoI-NCSA BSD public-domain rc"
