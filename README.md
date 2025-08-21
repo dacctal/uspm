@@ -1,5 +1,5 @@
 # uspm
-uspm is a universal package manager that compiles each package from source. It's also limited to the user, so each person using the system has their own packages in the $PATH by default.
+Universal source-based package manager that compiles packages from source for user-level installation It's also limited to the user, so each person using the system has their own packages in the $PATH by default.
 
 ## Getting Started
 > [!WARNING]
