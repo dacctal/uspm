@@ -219,7 +219,7 @@ void parse_package_info(const char *package_name, const char *toml_path) {
     char available[256];
     if (strcmp(source, "Unknown") != 0) {
         char *tag = get_git_version_from_source(source);
-        if (tag && strcmp(tag, "Unknown") != 0) {
+        if (tag && strcmp(tag, "Unknown") != 0 && strcmp(tag, "moved-to-git") != 0) {
             strncpy(available, tag, sizeof(available));
             available[sizeof(available)-1] = '\0';
         } else {
