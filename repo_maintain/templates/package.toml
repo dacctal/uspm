@@ -1,5 +1,5 @@
-version = "0.0.0"             # Optional hint; search may auto-resolve from source tags
-source = "https://example.com/repo"  # Upstream homepage or VCS URL (preferred: Git tag-able)
+version = "0.0.0"             # make sure to put latest version; search may auto-resolve from source tags
+source = "https://example.com/repo"  # Upstream Git or VCS URL (preferred: Git tag-able so search can auto-resolve)
 description = "Short, plain-English summary of the package"
 license = "MIT"              # SPDX identifier preferred (e.g., MIT, Apache-2.0, GPL-3.0-only)
 maintainer = "Your Name <you@example.com>"  # Required: who to contact for bumps/fixes

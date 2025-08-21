@@ -8,8 +8,6 @@ Working with uspm should be a breeze, as just typing `uspm` gives you all of its
 
 Each command is very simple, and should be very easy to type (yes, this is a feature)
 
-If you're looking for a package, you can look for it in the `repo` directory.
-If you want to add or maintain a package in this repository, see `repo_maintain/README.md` for templates and guidelines.
 ## Install
 Run this command to install uspm:
 ```
@@ -20,3 +18,7 @@ This script tries to add uspm to your `$PATH` using `~/.profile`. Make sure it's
 ```
 source ~/.profile
 ```
+## Contribution/repo maintanace
+
+If you're looking for a package, you can look for it in the `repo` directory.
+If you want to add or maintain a package in this repository, see `repo_maintain/README.md` for templates and guidelines.
