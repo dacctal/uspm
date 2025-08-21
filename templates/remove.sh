@@ -18,7 +18,7 @@ Appln="$HOME/.local/share/applications/$Package.desktop"
 #-- delete every binary & source file --#
 #
 sudo rm -rf "$Sources"
-sudo rm -rf "$Bin"
+sudo rm "$Bin"
 rm "$App"
 rm "$Appln"
 #
