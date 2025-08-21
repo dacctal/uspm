@@ -8,7 +8,7 @@ This directory hosts documentation and templates for maintainers contributing pa
 
 ### Read the templates first
 - Start with `repo_maintain/templates/install.sh` and `repo_maintain/templates/remove.sh`.
-- Do not change how `.sh` files are handled by the core tooling. Follow the template structure and comments. Keep `set -euo pipefail` style, validate inputs, avoid `sudo` and writes outside `$HOME`.
+- Do not change how `.sh` files are handled by the core tooling. Follow the template structure and comments. Avoid `sudo` and writes outside `$HOME`.
 - make sure depedancies are prodived by uspm repo.
 - Describe your package via `repo_maintain/templates/package.toml`. The schema is intentionally minimal:
 
@@ -92,7 +92,7 @@ git push -u origin feat/wpaperd-initial
 ```
 gh pr create \
   --title "Add: wpaperd (<summary>)" \
-  --body "Adds a curated uspm package for wpaperd.\n\n- No sudo; user-level install\n- Clean uninstall via manifest\n- Installs into ~/.local/opt/uspm/<name>/<version> and symlinks ~/.local/bin/<name>"
+  --body "Adds a curated uspm package for wpaperd.\n\n- No sudo; user-level install\n- Clean uninstall via manifest\n- Installs into ~/.local/share/uspm/bin/<name>/ and symlink if applicable a desktop file ~/.local/share/applications/<name>.desktop"
 ```
 
 ### Maintainer review checklist
