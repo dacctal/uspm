@@ -1,0 +1,4 @@
+version = "3.12.0"
+source = "https://github.com/python/cpython.git"
+description = "High-level programming language known for its simplicity and readability"
+license = "PSF" 

@@ -1,0 +1,4 @@
+version = "1.0.0"
+homepage = "https://github.com/will8211/unimatrix"
+description = "Matrix-style digital rain terminal animation with customizable characters"
+license = "GPL-3.0" 

@@ -1,0 +1,4 @@
+version = "8.5.0"
+source = "https://github.com/curl/curl.git"
+description = "Command line tool and library for transferring data with URLs"
+license = "MIT" 

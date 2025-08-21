@@ -1,0 +1,4 @@
+version = "1.11.1"
+homepage = "https://ninja-build.org/"
+description = "Small build system with a focus on speed and minimal overhead"
+license = "Apache-2.0" 

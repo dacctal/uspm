@@ -1,0 +1,4 @@
+version = "9.4"
+homepage = "https://www.gnu.org/software/coreutils/"
+description = "Basic file, shell and text manipulation utilities for GNU systems"
+license = "GPL-3.0" 

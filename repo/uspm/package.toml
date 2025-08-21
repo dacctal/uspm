@@ -1,0 +1,4 @@
+version = "1.0.0"
+source = "https://github.com/dacctal/uspm.git"
+description = "Universal source-based package manager that compiles packages from source for user-level installation"
+license = "MIT" 

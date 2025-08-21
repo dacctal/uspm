@@ -6,6 +6,7 @@
 #include "scripting/runInstallScript.c"
 #include "scripting/permRemoveScript.c"
 #include "scripting/runRemoveScript.c"
+#include "scripting/searchScript.c"
 
 int main(int argc, char *argv[]) {
 
@@ -31,6 +32,10 @@ int main(int argc, char *argv[]) {
       system("chmod +x ~/.local/share/uspm/repo/uspm/update.sh");
       printf("Updating packages...\n");
       system("~/.local/share/uspm/repo/uspm/update.sh");
+    }
+
+    else if(strcmp(argv[1], "s") == 0) {
+      searchScript(argc, argv);
     }
 
   }

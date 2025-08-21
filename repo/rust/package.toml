@@ -1,0 +1,4 @@
+version = "1.75.0"
+source = "https://github.com/rust-lang/rust.git"
+description = "Systems programming language focused on safety, speed, and concurrency"
+license = "MIT/Apache-2.0" 

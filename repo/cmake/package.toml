@@ -1,0 +1,4 @@
+version = "3.28.0"
+source = "https://github.com/Kitware/CMake.git"
+description = "Cross-platform build system generator for software projects"
+license = "BSD-3-Clause"
