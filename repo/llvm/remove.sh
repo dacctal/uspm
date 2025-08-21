@@ -4,7 +4,7 @@ Package="llvm"
 Sources="$HOME/.local/share/uspm/sources/$Package"
 Bin="$HOME/.local/share/uspm/bin/$Package"
 
-Builds="$HOME/.local/share/uspm/sources/gnu-coreutils/build/bin"
+Builds="$HOME/.local/share/uspm/sources/llvm/build/bin"
 
 for binfile in "$Builds"/*; do
   if [ -f "$binfile" ]; then
