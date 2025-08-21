@@ -4,6 +4,7 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <ctype.h>
 #include "getVersion.c"
 
 // Simple fuzzy search function
@@ -26,6 +27,38 @@ int fuzzy_match(const char *pattern, const char *text) {
     }
     
     return pattern_idx == pattern_len;
+}
+
+static void trim_whitespace(char *s) {
+    if (!s) return;
+    size_t len = strlen(s);
+    size_t start = 0;
+    while (start < len && isspace((unsigned char)s[start])) start++;
+    size_t end = len;
+    while (end > start && isspace((unsigned char)s[end - 1])) end--;
+    if (start > 0 || end < len) {
+        memmove(s, s + start, end - start);
+        s[end - start] = '\0';
+    }
+}
+
+static void strip_quotes(char *s) {
+    if (!s) return;
+    // Remove leading quotes repeatedly
+    while (s[0] == '"' || s[0] == '\'') {
+        memmove(s, s + 1, strlen(s));
+    }
+    // Remove trailing quotes repeatedly
+    size_t l = strlen(s);
+    while (l > 0 && (s[l - 1] == '"' || s[l - 1] == '\'')) {
+        s[--l] = '\0';
+    }
+}
+
+static void sanitize_value(char *s) {
+    trim_whitespace(s);
+    strip_quotes(s);
+    trim_whitespace(s);
 }
 
 // Check if package is installed
@@ -165,52 +198,16 @@ void parse_package_info(const char *package_name, const char *toml_path) {
         
         if (strncmp(line, "version = ", 10) == 0) {
             strcpy(version, line + 10);
-            if (version[0] == '"') {
-                memmove(version, version + 1, strlen(version));
-                if (version[strlen(version) - 1] == '"') {
-                    version[strlen(version) - 1] = '\0';
-                }
-            }
-            int len = strlen(version);
-            while (len > 0 && (version[len-1] == '"' || version[len-1] == ' ')) {
-                version[--len] = '\0';
-            }
+            sanitize_value(version);
         } else if (strncmp(line, "source = ", 9) == 0) {
             strcpy(source, line + 9);
-            if (source[0] == '"') {
-                memmove(source, source + 1, strlen(source));
-                if (source[strlen(source) - 1] == '"') {
-                    source[strlen(source) - 1] = '\0';
-                }
-            }
-            int len = strlen(source);
-            while (len > 0 && (source[len-1] == '"' || source[len-1] == ' ')) {
-                source[--len] = '\0';
-            }
+            sanitize_value(source);
         } else if (strncmp(line, "description = ", 13) == 0) {
             strcpy(description, line + 13);
-            if (description[0] == '"') {
-                memmove(description, description + 1, strlen(description));
-                if (description[strlen(description) - 1] == '"') {
-                    description[strlen(description) - 1] = '\0';
-                }
-            }
-            int len = strlen(description);
-            while (len > 0 && (description[len-1] == '"' || description[len-1] == ' ')) {
-                description[--len] = '\0';
-            }
+            sanitize_value(description);
         } else if (strncmp(line, "license = ", 10) == 0) {
             strcpy(license, line + 10);
-            if (license[0] == '"') {
-                memmove(license, license + 1, strlen(license));
-                if (license[strlen(license) - 1] == '"') {
-                    license[strlen(license) - 1] = '\0';
-                }
-            }
-            int len = strlen(license);
-            while (len > 0 && (license[len-1] == '"' || license[len-1] == ' ')) {
-                license[--len] = '\0';
-            }
+            sanitize_value(license);
         }
     }
     fclose(file);
