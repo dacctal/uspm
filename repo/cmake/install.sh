@@ -25,6 +25,3 @@ mkdir build && cd build
 ../bootstrap && make
 
 cp bin/* "$Bin"
-
-cd -
-cd -

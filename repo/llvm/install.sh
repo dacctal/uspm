@@ -34,5 +34,5 @@ cmake -G Ninja ../llvm \
 ninja -j$(nproc)
 ninja install
 
-cd -
-cd -
+Bin="$HOME/.local/share/uspm/bin/"
+cp bin/* "$Bin"

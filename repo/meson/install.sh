@@ -23,5 +23,3 @@ cd "$Sources"
 
 python3 -m pip install --prefix="$Sources" .
 cp "$Sources"/bin/meson "$Bin"
-
-cd -

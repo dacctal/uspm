@@ -30,5 +30,3 @@ mkdir -p "$(dirname "$Bin")"
 
 sudo cp /usr/local/bin/cairo-trace ~/.local/share/uspm/bin/
 sudo cp /usr/bin/cairo-trace ~/.local/share/uspm/bin/
-
-cd - || exit

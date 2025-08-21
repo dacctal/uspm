@@ -4,5 +4,12 @@ Package="llvm"
 Sources="$HOME/.local/share/uspm/sources/$Package"
 Bin="$HOME/.local/share/uspm/bin/$Package"
 
-rm -rf "$Bin"
+Builds="$Sources/build/bin"
+
+for binfile in "$Builds"/*; do
+  if [ -f "$binfile" ]; then
+    rm "$Bin"/"$(basename "$binfile")"
+  fi
+done
+
 rm -rf "$Sources"

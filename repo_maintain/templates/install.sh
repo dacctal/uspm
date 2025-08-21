@@ -126,16 +126,6 @@ chmod +x "$Bin"/applications/"$Package".desktop
 
 
 
-#-- cd back to user's original dir --#
-#
-cd -
-cd -
-#
-#-- however many cd's you do, --#
-#-- that's how many of these you do --#
-
-
-
 #-- relocate .desktop file & generate .desktop symlink --#
 #-- ONLY FOR APPLICATIONS, --#
 #-- NOT CLI TOOLS --#

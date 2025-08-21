@@ -27,5 +27,3 @@ python3 configure.py
 cmake -Bbuild-cmake -DBUILD_TESTING=OFF
 cmake --build build-cmake
 cp build-cmake/ninja "$Bin"
-
-cd -

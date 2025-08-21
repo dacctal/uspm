@@ -23,5 +23,3 @@ cd "$Sources" || exit
 
 cargo build --release
 cp target/release/otter-launcher "$Bin"
-
-cd -

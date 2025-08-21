@@ -28,5 +28,3 @@ sudo make PREFIX="$Sources" install
 gtk-update-icon-cache
 
 sudo mv /usr/local/bin/yad* "$Bin"
-
-cd -

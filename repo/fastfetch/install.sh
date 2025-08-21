@@ -27,6 +27,3 @@ cd build
 cmake ..
 cmake --build . --target fastfetch
 sudo cp fastfetch "$Bin"
-
-cd -
-cd -
