@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <ctype.h>
 #include "getVersion.c"
+#include "onlineRepo.c"
 
 // Simple fuzzy search function
 int fuzzy_match(const char *pattern, const char *text) {
@@ -236,6 +237,68 @@ void parse_package_info(const char *package_name, const char *toml_path) {
     printf("      License:       %s\n\n", license);
 }
 
+// Parse TOML content from string (for online packages)
+void parse_package_info_from_content(const char *package_name, const char *toml_content) {
+    if (!toml_content) {
+        printf("      Latest version available: [ No metadata ]\n");
+        printf("      Latest version installed: %s\n", get_installed_version(package_name));
+        printf("      Size of files: %s\n", get_package_size(package_name));
+        printf("      Source:      [ No metadata ]\n");
+        printf("      Description:   [ No metadata ]\n");
+        printf("      License:       [ No metadata ]\n\n");
+        return;
+    }
+    
+    char *content_copy = strdup(toml_content);
+    char *line = strtok(content_copy, "\n");
+    char version[128] = "Unknown";
+    char source[256] = "Unknown";
+    char description[512] = "No description available";
+    char license[128] = "Unknown";
+    
+    while (line != NULL) {
+        if (strncmp(line, "version = ", 10) == 0) {
+            strcpy(version, line + 10);
+            sanitize_value(version);
+        } else if (strncmp(line, "source = ", 9) == 0) {
+            strcpy(source, line + 9);
+            sanitize_value(source);
+        } else if (strncmp(line, "description = ", 13) == 0) {
+            strcpy(description, line + 13);
+            sanitize_value(description);
+        } else if (strncmp(line, "license = ", 10) == 0) {
+            strcpy(license, line + 10);
+            sanitize_value(license);
+        }
+        line = strtok(NULL, "\n");
+    }
+    
+    free(content_copy);
+
+    // Prefer tag lookup from source if available; otherwise keep TOML version
+    char available[256];
+    if (strcmp(source, "Unknown") != 0) {
+        char *tag = get_git_version_from_source(source);
+        if (tag && strcmp(tag, "Unknown") != 0 && strcmp(tag, "moved-to-git") != 0) {
+            strncpy(available, tag, sizeof(available));
+            available[sizeof(available)-1] = '\0';
+        } else {
+            strncpy(available, version, sizeof(available));
+            available[sizeof(available)-1] = '\0';
+        }
+    } else {
+        strncpy(available, version, sizeof(available));
+        available[sizeof(available)-1] = '\0';
+    }
+
+    printf("      Latest version available: %s\n", available);
+    printf("      Latest version installed: %s\n", get_installed_version(package_name));
+    printf("      Size of files: %s\n", get_package_size(package_name));
+    printf("      Source:      %s\n", source);
+    printf("      Description:   %s\n", description);
+    printf("      License:       %s\n\n", license);
+}
+
 // Enhanced search function that searches package name and description
 int enhanced_search(const char *search_term, const char *package_name, const char *toml_path) {
     // First check if search term matches package name
@@ -282,6 +345,53 @@ int enhanced_search(const char *search_term, const char *package_name, const cha
     return 0;
 }
 
+// Enhanced search function that searches package name and description (for online packages)
+int enhanced_search_online(const char *search_term, const char *package_name, const char *toml_content) {
+    // First check if search term matches package name
+    if (fuzzy_match(search_term, package_name)) {
+        return 1;
+    }
+    
+    // Then check if search term matches any content in TOML content
+    if (!toml_content) {
+        return 0;
+    }
+    
+    char *content_copy = strdup(toml_content);
+    char *line = strtok(content_copy, "\n");
+    
+    while (line != NULL) {
+        // Convert line to lowercase for case-insensitive search
+        char lower_line[512];
+        strcpy(lower_line, line);
+        for (int i = 0; lower_line[i]; i++) {
+            if (lower_line[i] >= 'A' && lower_line[i] <= 'Z') {
+                lower_line[i] = lower_line[i] + 32;
+            }
+        }
+        
+        // Convert search term to lowercase
+        char lower_search[256];
+        strcpy(lower_search, search_term);
+        for (int i = 0; lower_search[i]; i++) {
+            if (lower_search[i] >= 'A' && lower_search[i] <= 'Z') {
+                lower_search[i] = lower_search[i] + 32;
+            }
+        }
+        
+        // Check if search term is found in the line
+        if (strstr(lower_line, lower_search) != NULL) {
+            free(content_copy);
+            return 1;
+        }
+        
+        line = strtok(NULL, "\n");
+    }
+    
+    free(content_copy);
+    return 0;
+}
+
 void searchScript(int argc, char *argv[]) {
     if (argc < 3) {
         printf("Usage: uspm s <search-term1> [search-term2] [search-term3] ...\n");
@@ -289,48 +399,94 @@ void searchScript(int argc, char *argv[]) {
         return;
     }
     
-    char repo_path[512];
-    snprintf(repo_path, sizeof(repo_path), "%s/.local/share/uspm/repo", getenv("HOME"));
+    // Check if local repo exists
+    int use_local = local_repo_exists();
     
-    DIR *dir = opendir(repo_path);
-    if (!dir) {
-        printf("Error: Could not open repository directory\n");
-        return;
-    }
-    
-    struct dirent *entry;
-    
-    // Display results for each search term
-    for (int i = 2; i < argc; i++) {
-        rewinddir(dir);
-        int found_count = 0;
+    if (use_local) {
+        printf("[ Using local repository ]\n\n");
         
-        printf("[ Results for search key : %s ]\n", argv[i]);
-        printf("Searching...\n\n");
+        char repo_path[512];
+        snprintf(repo_path, sizeof(repo_path), "%s/.local/share/uspm/repo", getenv("HOME"));
         
-        while ((entry = readdir(dir)) != NULL) {
-            if (entry->d_type == DT_DIR && strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0) {
-                char toml_path[512];
-                snprintf(toml_path, sizeof(toml_path), "%s/%s/package.toml", repo_path, entry->d_name);
-                
-                if (enhanced_search(argv[i], entry->d_name, toml_path)) {
-                    printf("%s\n", entry->d_name);
-                    parse_package_info(entry->d_name, toml_path);
-                    found_count++;
+        DIR *dir = opendir(repo_path);
+        if (!dir) {
+            printf("Error: Could not open repository directory\n");
+            return;
+        }
+        
+        struct dirent *entry;
+        
+        // Display results for each search term
+        for (int i = 2; i < argc; i++) {
+            rewinddir(dir);
+            int found_count = 0;
+            
+            printf("[ Results for search key : %s ]\n", argv[i]);
+            printf("Searching...\n\n");
+            
+            while ((entry = readdir(dir)) != NULL) {
+                if (entry->d_type == DT_DIR && strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0) {
+                    char toml_path[512];
+                    snprintf(toml_path, sizeof(toml_path), "%s/%s/package.toml", repo_path, entry->d_name);
+                    
+                    if (enhanced_search(argv[i], entry->d_name, toml_path)) {
+                        printf("%s\n", entry->d_name);
+                        parse_package_info(entry->d_name, toml_path);
+                        found_count++;
+                    }
                 }
+            }
+            
+            if (found_count == 0) {
+                printf("No packages found matching '%s'\n", argv[i]);
+            }
+            
+            printf("[ Applications found : %d ]\n", found_count);
+            
+            if (i < argc - 1) {
+                printf("\n");
             }
         }
         
-        if (found_count == 0) {
-            printf("No packages found matching '%s'\n", argv[i]);
+        closedir(dir);
+        
+    } else {
+        printf("[ Using online repository ]\n\n");
+        
+        char packages[MAX_PACKAGES][MAX_PACKAGE_NAME];
+        int package_count = get_online_package_list(packages, MAX_PACKAGES);
+        
+        if (package_count == 0) {
+            printf("Error: Could not fetch package list from online repository\n");
+            return;
         }
         
-        printf("[ Applications found : %d ]\n", found_count);
-        
-        if (i < argc - 1) {
-            printf("\n");
+        // Display results for each search term
+        for (int i = 2; i < argc; i++) {
+            int found_count = 0;
+            
+            printf("[ Results for search key : %s ]\n", argv[i]);
+            printf("Searching...\n\n");
+            
+            for (int j = 0; j < package_count; j++) {
+                char *toml_content = get_online_package_toml(packages[j]);
+                
+                if (enhanced_search_online(argv[i], packages[j], toml_content)) {
+                    printf("%s\n", packages[j]);
+                    parse_package_info_from_content(packages[j], toml_content);
+                    found_count++;
+                }
+            }
+            
+            if (found_count == 0) {
+                printf("No packages found matching '%s'\n", argv[i]);
+            }
+            
+            printf("[ Applications found : %d ]\n", found_count);
+            
+            if (i < argc - 1) {
+                printf("\n");
+            }
         }
     }
-    
-    closedir(dir);
 } 
