@@ -1,0 +1,10 @@
+version = "0.0.0"             # Optional hint; search may auto-resolve from source tags
+source = "https://example.com/repo"  # Upstream homepage or VCS URL (preferred: Git tag-able)
+description = "Short, plain-English summary of the package"
+license = "MIT"              # SPDX identifier preferred (e.g., MIT, Apache-2.0, GPL-3.0-only)
+maintainer = "Your Name <you@example.com>"  # Required: who to contact for bumps/fixes
+
+# Notes:
+# - Keys are simple K=V pairs. Avoid adding custom keys without discussion.
+# - Version may be inferred by search tooling when the source is a VCS with tags.
+# - Keep description succinct; long docs belong in README or repo.
