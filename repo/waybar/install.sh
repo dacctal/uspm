@@ -1,6 +1,6 @@
 #!/bin/sh
 
-Dependencies=("ninja" "meson")
+Dependencies=("meson" "ninja")
 
 for Dep in ${Dependencies[@]}; do
   if ! [ -f "$HOME/.local/share/uspm/bin/$Dep" ]; then
@@ -11,10 +11,10 @@ for Dep in ${Dependencies[@]}; do
   fi
 done
 
-Package="fuzzel"
+Package="waybar"
 Sources="$HOME/.local/share/uspm/sources/$Package"
 Bin="$HOME/.local/share/uspm/bin/"
-Clone="https://codeberg.org/dnkl/fuzzel.git"
+Clone="https://github.com/Alexays/Waybar"
 
 rm -rf "$Sources"
 rm "$Appln"
@@ -23,25 +23,20 @@ rm "$App"
 git clone "$Clone" "$Sources"
 cd "$Sources"
 
-mkdir -p bld/release && cd bld/release
-meson --buildtype=release --prefix="$Sources" \
-  ../..
-ninja
-ninja install
+meson setup build
+ninja -C build
 
-cp fuzzel "$Bin"
+cp build/waybar "$Bin"
 
 echo "[Desktop Entry]
-Name=Fuzzel
-Comment=Fuzzel app launcher
-Exec=/home/dacc/.local/share/uspm/bin/fuzzel
+Name=Waybar
+Comment=Wayland status bar
+Exec="$Sources"
 Terminal=false
 Type=Application
-Categories=App Launcher;
 " >>"$Bin"/applications/"$Package".desktop
 chmod +x "$Bin"/applications/"$Package".desktop
 
-cd -
 cd -
 
 mkdir -p ~/.local/share/applications

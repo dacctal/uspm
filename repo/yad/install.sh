@@ -16,7 +16,7 @@ Sources="$HOME/.local/share/uspm/sources/$Package"
 Bin="$HOME/.local/share/uspm/bin/"
 Clone="https://github.com/v1cont/yad.git"
 
-rm -rf ~/.local/share/uspm/sources/yad/
+rm -rf "$Sources"
 
 git clone "$Clone" "$Sources"
 cd "$Sources"
@@ -24,7 +24,7 @@ cd "$Sources"
 autoreconf -ivf intltoolize
 ./configure
 make
-sudo make PREFIX=$HOME/.local/share/uspm/sources/yad install
+sudo make PREFIX="$Sources" install
 gtk-update-icon-cache
 
 sudo mv /usr/local/bin/yad* "$Bin"

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-Package="fuzzel"
+Package="waybar"
 Sources="$HOME/.local/share/uspm/sources/$Package"
 Bin="$HOME/.local/share/uspm/bin/$Package"
 App="$HOME/.local/share/uspm/bin/applications/$Package.desktop"
