@@ -9,8 +9,7 @@ This directory hosts documentation and templates for maintainers contributing pa
 ### Read the templates first
 - Start with `repo_maintain/templates/install.sh` and `repo_maintain/templates/remove.sh`.
 - Do not change how `.sh` files are handled by the core tooling. Follow the template structure and comments. Keep `set -euo pipefail` style, validate inputs, avoid `sudo` and writes outside `$HOME`.
-- > [!WARNING]
-> make sure depedancy are prodived by uspm repo.
+- make sure depedancies are prodived by uspm repo.
 - Describe your package via `repo_maintain/templates/package.toml`. The schema is intentionally minimal:
 
 ```
