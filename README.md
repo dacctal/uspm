@@ -21,4 +21,4 @@ source ~/.profile
 ## Contribution/repo maintanace
 
 If you're looking for a package, you can look for it in the `repo` directory.
-If you want to add or maintain a package in this repository, see `[repo_maintain/README.md](https://github.com/dacctal/uspm/tree/main/repo_maintain)` for templates and guidelines.
+If you want to add or maintain a package in this repository, see `repo_maintain/README.md](https://github.com/dacctal/uspm/tree/main/repo_maintain` for templates and guidelines.
