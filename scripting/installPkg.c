@@ -9,7 +9,7 @@
 void installPkg(int argc, char *argv[]) {
   printf("Packages queued for install:\n\n");
   for (int i = 2; argv[i] != NULL; i++) {
-    printf("    %s\n", argv[i]);
+    printf("\e[1m\033[32m    %s\e[m\033[m\n", argv[i]);
   }
   printf("\n");
   char confirm[256];
