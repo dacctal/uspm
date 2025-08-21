@@ -4,6 +4,7 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include "getVersion.c"
 
 // Simple fuzzy search function
 int fuzzy_match(const char *pattern, const char *text) {
@@ -48,12 +49,38 @@ int is_package_installed(const char *package_name) {
 
 // Get installed version (simplified - just check if installed)
 char* get_installed_version(const char *package_name) {
-    static char version[64];
-    if (is_package_installed(package_name)) {
-        strcpy(version, "[ Installed ]");
-    } else {
+    static char version[256];
+
+    if (!is_package_installed(package_name)) {
         strcpy(version, "[ Not Installed ]");
+        return version;
     }
+
+    // Try to derive installed version from git describe in sources dir
+    char src_path[512];
+    snprintf(src_path, sizeof(src_path), "%s/.local/share/uspm/sources/%s", getenv("HOME"), package_name);
+
+    char command[768];
+    snprintf(command, sizeof(command), "git -C '%s' describe 2>/dev/null", src_path);
+
+    FILE *pipe = popen(command, "r");
+    if (!pipe) {
+        strcpy(version, "[ Installed ]");
+        return version;
+    }
+
+    char describe_out[256] = {0};
+    if (fgets(describe_out, sizeof(describe_out), pipe) != NULL) {
+        describe_out[strcspn(describe_out, "\n")] = 0;
+    }
+    pclose(pipe);
+
+    if (describe_out[0] != '\0') {
+        snprintf(version, sizeof(version), "[ installed %s ]", describe_out);
+    } else {
+        strcpy(version, "[ Installed ]");
+    }
+
     return version;
 }
 
@@ -114,68 +141,6 @@ char* get_package_size(const char *package_name) {
     return size_str;
 }
 
-// Get latest version for git packages
-char* get_git_version(const char *package_name) {
-    static char version[128];
-    char install_path[512];
-    snprintf(install_path, sizeof(install_path), "%s/.local/share/uspm/repo/%s/install.sh", getenv("HOME"), package_name);
-    
-    FILE *file = fopen(install_path, "r");
-    if (!file) {
-        strcpy(version, "Unknown");
-        return version;
-    }
-    
-    char line[512];
-    char clone_url[256] = "";
-    
-    // Look for git clone URL
-    while (fgets(line, sizeof(line), file)) {
-        if (strstr(line, "git clone") && strstr(line, ".git")) {
-            char *start = strstr(line, "https://");
-            if (start) {
-                char *end = strstr(start, ".git");
-                if (end) {
-                    int len = end - start + 4;
-                    strncpy(clone_url, start, len);
-                    clone_url[len] = '\0';
-                    break;
-                }
-            }
-        }
-    }
-    fclose(file);
-    
-    if (strlen(clone_url) == 0) {
-        strcpy(version, "Unknown");
-        return version;
-    }
-    
-    // Execute git ls-remote command
-    char command[512];
-    snprintf(command, sizeof(command), 
-             "git ls-remote --tags --sort=\"v:refname\" '%s' | tail -n1 | sed 's/.*\\///; s/\\^{}//'", 
-             clone_url);
-    
-    FILE *pipe = popen(command, "r");
-    if (!pipe) {
-        strcpy(version, "Unknown");
-        return version;
-    }
-    
-    if (fgets(version, sizeof(version), pipe) != NULL) {
-        version[strcspn(version, "\n")] = 0;
-        if (strlen(version) == 0) {
-            strcpy(version, "Unknown");
-        }
-    } else {
-        strcpy(version, "Unknown");
-    }
-    
-    pclose(pipe);
-    return version;
-}
-
 // Parse TOML file and extract package info
 void parse_package_info(const char *package_name, const char *toml_path) {
     FILE *file = fopen(toml_path, "r");
@@ -200,14 +165,12 @@ void parse_package_info(const char *package_name, const char *toml_path) {
         
         if (strncmp(line, "version = ", 10) == 0) {
             strcpy(version, line + 10);
-            // Remove quotes if present
             if (version[0] == '"') {
                 memmove(version, version + 1, strlen(version));
                 if (version[strlen(version) - 1] == '"') {
                     version[strlen(version) - 1] = '\0';
                 }
             }
-            // Remove any trailing quotes or spaces
             int len = strlen(version);
             while (len > 0 && (version[len-1] == '"' || version[len-1] == ' ')) {
                 version[--len] = '\0';
@@ -220,7 +183,6 @@ void parse_package_info(const char *package_name, const char *toml_path) {
                     source[strlen(source) - 1] = '\0';
                 }
             }
-            // Remove any trailing quotes or spaces
             int len = strlen(source);
             while (len > 0 && (source[len-1] == '"' || source[len-1] == ' ')) {
                 source[--len] = '\0';
@@ -233,7 +195,6 @@ void parse_package_info(const char *package_name, const char *toml_path) {
                     description[strlen(description) - 1] = '\0';
                 }
             }
-            // Remove any trailing quotes or spaces
             int len = strlen(description);
             while (len > 0 && (description[len-1] == '"' || description[len-1] == ' ')) {
                 description[--len] = '\0';
@@ -246,7 +207,6 @@ void parse_package_info(const char *package_name, const char *toml_path) {
                     license[strlen(license) - 1] = '\0';
                 }
             }
-            // Remove any trailing quotes or spaces
             int len = strlen(license);
             while (len > 0 && (license[len-1] == '"' || license[len-1] == ' ')) {
                 license[--len] = '\0';
@@ -254,16 +214,24 @@ void parse_package_info(const char *package_name, const char *toml_path) {
         }
     }
     fclose(file);
-    
-    // Check if it's a git package and get version
-    if (strcmp(version, "Unknown") == 0) {
-        char *git_version = get_git_version(package_name);
-        if (strcmp(git_version, "Unknown") != 0) {
-            strcpy(version, git_version);
+
+    // Prefer tag lookup from source if available; otherwise keep TOML version
+    char available[256];
+    if (strcmp(source, "Unknown") != 0) {
+        char *tag = get_git_version_from_source(source);
+        if (tag && strcmp(tag, "Unknown") != 0) {
+            strncpy(available, tag, sizeof(available));
+            available[sizeof(available)-1] = '\0';
+        } else {
+            strncpy(available, version, sizeof(available));
+            available[sizeof(available)-1] = '\0';
         }
+    } else {
+        strncpy(available, version, sizeof(available));
+        available[sizeof(available)-1] = '\0';
     }
-    
-    printf("      Latest version available: %s\n", version);
+
+    printf("      Latest version available: %s\n", available);
     printf("      Latest version installed: %s\n", get_installed_version(package_name));
     printf("      Size of files: %s\n", get_package_size(package_name));
     printf("      Source:      %s\n", source);
