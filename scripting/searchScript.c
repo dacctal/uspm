@@ -29,9 +29,21 @@ int fuzzy_match(const char *pattern, const char *text) {
 
 // Check if package is installed
 int is_package_installed(const char *package_name) {
-    char bin_path[512];
-    snprintf(bin_path, sizeof(bin_path), "%s/.local/share/uspm/bin/%s", getenv("HOME"), package_name);
-    return access(bin_path, F_OK) == 0;
+    char path_buf[1024];
+
+    // Check uspm-managed bin
+    snprintf(path_buf, sizeof(path_buf), "%s/.local/share/uspm/bin/%s", getenv("HOME"), package_name);
+    if (access(path_buf, F_OK) == 0) {
+        return 1;
+    }
+
+    // Check uspm-managed applications desktop entry
+    snprintf(path_buf, sizeof(path_buf), "%s/.local/share/uspm/bin/applications/%s.desktop", getenv("HOME"), package_name);
+    if (access(path_buf, F_OK) == 0) {
+        return 1;
+    }
+
+    return 0;
 }
 
 // Get installed version (simplified - just check if installed)
