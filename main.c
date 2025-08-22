@@ -4,8 +4,7 @@
 #include <unistd.h>
 
 #include "scripting/installPkg.c"
-#include "scripting/permRemoveScript.c"
-#include "scripting/runRemoveScript.c"
+#include "scripting/removePkg.c"
 #include "scripting/searchScript.c"
 #include "scripting/onlineSearchScript.c"
 #include "scripting/updateUspm.c"
@@ -24,8 +23,7 @@ int main(int argc, char *argv[]) {
     }
 
     else if(strcmp(argv[1], "r") == 0) {
-      permRemoveScript(argc, argv);
-      runRemoveScript(argc, argv);
+      removePkg(argc, argv);
     }
 
     else if(strcmp(argv[1], "u") == 0) {
