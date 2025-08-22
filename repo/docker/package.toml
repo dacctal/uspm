@@ -1,4 +1,4 @@
 version = "24.0.0"
-homepage = "https://www.docker.com/"
+source = "https://www.docker.com/"
 description = "Platform for developing, shipping, and running applications in containers"
 license = "Apache-2.0" 

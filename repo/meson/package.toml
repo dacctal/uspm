@@ -1,4 +1,4 @@
 version = "1.2.0"
-homepage = "https://mesonbuild.com/"
+source = "https://mesonbuild.com/"
 description = "Fast and user-friendly build system designed for modern software projects"
 license = "Apache-2.0" 

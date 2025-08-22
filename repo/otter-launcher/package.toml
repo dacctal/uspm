@@ -1,4 +1,4 @@
 version = "0.1.0"
-homepage = "https://github.com/otter-launcher/otter"
+source = "https://github.com/otter-launcher/otter"
 description = "Fast and lightweight application launcher for Linux desktop environments"
 license = "MIT" 

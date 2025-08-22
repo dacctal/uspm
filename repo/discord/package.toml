@@ -1,4 +1,4 @@
 version = "0.0.25"
-homepage = "https://github.com/srevinsaju/discord_arch_electron"
+source = "https://github.com/srevinsaju/discord_arch_electron"
 description = "Discord client for Linux with enhanced features and customization options"
 license = "MIT" 

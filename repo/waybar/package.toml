@@ -1,4 +1,4 @@
 version = "0.9.20"
-homepage = "https://github.com/Alexays/Waybar"
+source = "https://github.com/Alexays/Waybar"
 description = "Highly customizable Wayland bar for Sway and Wlroots based compositors"
 license = "MIT" 

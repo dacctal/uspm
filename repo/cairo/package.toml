@@ -1,4 +1,4 @@
 version = "1.18.0"
-homepage = "https://www.cairographics.org/"
+source = "https://www.cairographics.org/"
 description = "2D graphics library with support for multiple output devices and drawing operations"
 license = "LGPL-2.1" 

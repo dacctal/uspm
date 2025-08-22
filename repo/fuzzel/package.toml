@@ -1,4 +1,4 @@
 version = "1.9.0"
-homepage = "https://codeberg.org/dnkl/fuzzel"
+source = "https://codeberg.org/dnkl/fuzzel"
 description = "Application launcher for Wayland with fuzzy search capabilities"
 license = "MIT" 
