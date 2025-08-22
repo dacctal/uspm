@@ -1,0 +1,4 @@
+version = "v0.2.1-5-g4e6d37e"
+homepage = "https://github.com/heather7283/pipemixer"
+description = "TUI volume control app for pipewire"
+license = "GPL-3.0"
