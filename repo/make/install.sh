@@ -1,6 +1,6 @@
 #!/bin/sh
 
-Dependencies=("")
+Dependencies=("gnu-coreutils")
 
 for Dep in ${Dependencies[@]}; do
   if ! [ -f "$HOME/.local/share/uspm/bin/$Dep" ]; then
