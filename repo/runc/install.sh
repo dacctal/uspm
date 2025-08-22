@@ -1,6 +1,6 @@
 #!/bin/sh
 
-Dependencies=("")
+Dependencies=("make")
 
 for Dep in ${Dependencies[@]}; do
   if ! [ -f "$HOME/.local/share/uspm/bin/$Dep" ]; then
@@ -11,18 +11,17 @@ for Dep in ${Dependencies[@]}; do
   fi
 done
 
-Package="curl"
+Package="runc"
 Sources="$HOME/.local/share/uspm/sources/$Package"
 Bin="$HOME/.local/share/uspm/bin/"
-Clone="https://github.com/curl/curl.git"
+Code="https://github.com/opencontainers/runc.git"
 
-rm -rf "$Sources"
+rm -rf $Sources
 
-git clone "$Clone" "$Sources"
-cd "$Sources"
+git clone $Code $Sources
+cd $Sources
 
-./buildconf
-./configure --with-openssl --with-zlib --prefix="$Sources"
-make -j$(nproc)
-sudo make install
-cp bin/* "$Bin"
+make
+mkdir bin
+cp runc bin
+cp runc $Bin

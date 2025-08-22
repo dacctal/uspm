@@ -1,6 +1,6 @@
 #!/bin/sh
 
-Dependencies=("make")
+Dependencies=("runc containerd moby")
 
 for Dep in ${Dependencies[@]}; do
   if ! [ -f "$HOME/.local/share/uspm/bin/$Dep" ]; then
@@ -14,28 +14,26 @@ done
 Package="docker"
 Sources="$HOME/.local/share/uspm/sources/$Package"
 Bin="$HOME/.local/share/uspm/bin/"
+Code="https://github.com/docker/cli.git"
 
-rm -rf "$Sources"
+rm -rf $Sources
 
-git clone https://github.com/moby/moby.git "$Sources"/moby
-cd "$Sources"/moby
+git clone $Code $Sources
+cd $Sources
 
-make binary
+go mod init github.com/docker/cli
+go mod tidy
+rm -rf vendor
+go get ./...
+go build -v -o ./docker ./cmd/docker
 
-git clone https://github.com/docker/cli.git "$Sources"/cli
+mkdir bin
+cp docker bin
 
-make -f docker.Makefile binary
+Builds="$Sources/bin"
 
-install -Dm755 bundles/binary-daemon/dockerd "$Bin"
-install -Dm755 cli/build/docker "$Bin"
-
-git clone https://github.com/containerd/containerd.git "$Sources"/containerd
-cd "$Sources"/containerd
-make
-install bin/containerd* "$Bin"
-
-git clone https://github.com/opencontainers/runc.git "$Sources"/runc
-cd "$Sources"/runc
-make
-install runc "$Bin"
-
+for binfile in "$Builds"/*; do
+  if [ -f "$binfile" ]; then
+    cp "$binfile" "$Bin"
+  fi
+done

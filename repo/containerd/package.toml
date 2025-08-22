@@ -1,0 +1,4 @@
+version = "v2.1.0-307-ga29b24f02"
+source = "https://github.com/containerd/containerd.git"
+description = "An open and reliable container runtime"
+license = "Apache-2.0" 

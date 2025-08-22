@@ -114,10 +114,6 @@ Type=Application
 Categories=Example;" \
 #
 #-- generate .desktop file --#
-
-
-
-#-- Do not touch --#
 #
   >>"$Bin"/applications/"$Package".desktop
 chmod +x "$Bin"/applications/"$Package".desktop

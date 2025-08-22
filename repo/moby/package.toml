@@ -1,0 +1,4 @@
+version = "v2.1.0-307-ga29b24f02"
+source = "https://github.com/moby/moby"
+description = "The Moby Project - a collaborative project for the container ecosystem to assemble container-based systems"
+license = "Apache-2.0" 

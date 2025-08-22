@@ -1,10 +1,10 @@
 #!/bin/sh
 
-Package="docker"
+Package="runc"
 Sources="$HOME/.local/share/uspm/sources/$Package"
 Bin="$HOME/.local/share/uspm/bin/"
 
-Builds="$Sources/bin"
+Builds=$Sources/bin
 
 for binfile in "$Builds"/*; do
   if [ -f "$binfile" ]; then
@@ -12,4 +12,4 @@ for binfile in "$Builds"/*; do
   fi
 done
 
-rm -rf $Sources
+rm -rf "$Sources"

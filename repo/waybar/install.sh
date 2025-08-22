@@ -31,7 +31,7 @@ cp build/waybar "$Bin"
 echo "[Desktop Entry]
 Name=Waybar
 Comment=Wayland status bar
-Exec="$Sources"
+Exec="$Sources/build/waybar"
 Terminal=false
 Type=Application
 " >>"$Bin"/applications/"$Package".desktop

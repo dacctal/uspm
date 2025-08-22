@@ -11,18 +11,23 @@ for Dep in ${Dependencies[@]}; do
   fi
 done
 
-Package="curl"
+Package="moby"
 Sources="$HOME/.local/share/uspm/sources/$Package"
 Bin="$HOME/.local/share/uspm/bin/"
-Clone="https://github.com/curl/curl.git"
+Code="https://github.com/moby/moby"
 
-rm -rf "$Sources"
+rm -rf $Sources
 
-git clone "$Clone" "$Sources"
-cd "$Sources"
+git clone $Code $Sources
+cd $Sources
 
-./buildconf
-./configure --with-openssl --with-zlib --prefix="$Sources"
-make -j$(nproc)
-sudo make install
-cp bin/* "$Bin"
+mkdir -p bundles
+hack/make.sh binary
+
+Builds="$Sources/bundles/binary-daemon"
+
+for binfile in "$Builds"/*; do
+  if [ -f "$binfile" ]; then
+    cp "$binfile" "$Bin"
+  fi
+done

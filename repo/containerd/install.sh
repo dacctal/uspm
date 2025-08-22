@@ -1,6 +1,6 @@
 #!/bin/sh
 
-Dependencies=("")
+Dependencies=("make")
 
 for Dep in ${Dependencies[@]}; do
   if ! [ -f "$HOME/.local/share/uspm/bin/$Dep" ]; then
@@ -11,18 +11,22 @@ for Dep in ${Dependencies[@]}; do
   fi
 done
 
-Package="curl"
+Package="containerd"
 Sources="$HOME/.local/share/uspm/sources/$Package"
 Bin="$HOME/.local/share/uspm/bin/"
-Clone="https://github.com/curl/curl.git"
+Code="https://github.com/containerd/containerd.git"
 
-rm -rf "$Sources"
+rm -rf $Sources
 
-git clone "$Clone" "$Sources"
-cd "$Sources"
+git clone $Code $Sources
+cd $Sources
 
-./buildconf
-./configure --with-openssl --with-zlib --prefix="$Sources"
-make -j$(nproc)
-sudo make install
-cp bin/* "$Bin"
+make
+
+Builds="$Sources/bin"
+
+for binfile in "$Builds"/*; do
+  if [ -f "$binfile" ]; then
+    cp "$binfile" "$Bin"
+  fi
+done

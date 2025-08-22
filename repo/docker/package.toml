@@ -1,4 +1,4 @@
-version = "24.0.0"
-source = "https://www.docker.com/"
-description = "Platform for developing, shipping, and running applications in containers"
+version = "v28.3.3-313-g58bb45c37f"
+source = "https://github.com/docker/cli"
+description = "The Docker CLI"
 license = "Apache-2.0" 
