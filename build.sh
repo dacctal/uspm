@@ -1,18 +1,11 @@
 #!/bin/bash
 
-echo "Do you want to use local repository? (Y/N)"
-read -r use_local
+echo "Building USPM and setting up local repository..."
 
 gcc main.c -o uspm
 
-if [ "$use_local" = "Y" ] || [ "$use_local" = "y" ]; then
-    echo "Setting up local repository..."
-    cp -r ./repo ~/.local/share/uspm/
-else
-    echo "Setting up online repository mode..."
-    # Create repo directory but don't copy local files
-    mkdir -p ~/.local/share/uspm/repo
-fi
+echo "Setting up local repository..."
+cp -r ./repo ~/.local/share/uspm/
 
 mkdir -p ~/.local/share/uspm/bin/
 mkdir -p ~/.local/share/uspm/sources/

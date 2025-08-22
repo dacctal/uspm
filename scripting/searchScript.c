@@ -399,94 +399,67 @@ void searchScript(int argc, char *argv[]) {
         return;
     }
     
-    // Check if local repo exists
-    int use_local = local_repo_exists();
+    // Always search local repo (like before) - blazing fast!
+    char repo_path[512];
+    snprintf(repo_path, sizeof(repo_path), "%s/.local/share/uspm/repo", getenv("HOME"));
     
-    if (use_local) {
-        printf("[ Using local repository ]\n\n");
+    DIR *dir = opendir(repo_path);
+    if (!dir) {
+        printf("Error: Could not open local repository directory\n");
+        printf("Please run 'uspm u' to initialize the repository\n");
+        return;
+    }
+    
+    struct dirent *entry;
+    int total_online_available = 0;
+    
+    // Display results for each search term
+    for (int i = 2; i < argc; i++) {
+        rewinddir(dir);
+        int found_count = 0;
         
-        char repo_path[512];
-        snprintf(repo_path, sizeof(repo_path), "%s/.local/share/uspm/repo", getenv("HOME"));
+        printf("[ Results for search key : %s ]\n", argv[i]);
+        printf("Searching local ...\n\n");
         
-        DIR *dir = opendir(repo_path);
-        if (!dir) {
-            printf("Error: Could not open repository directory\n");
-            return;
-        }
-        
-        struct dirent *entry;
-        
-        // Display results for each search term
-        for (int i = 2; i < argc; i++) {
-            rewinddir(dir);
-            int found_count = 0;
-            
-            printf("[ Results for search key : %s ]\n", argv[i]);
-            printf("Searching...\n\n");
-            
-            while ((entry = readdir(dir)) != NULL) {
-                if (entry->d_type == DT_DIR && strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0) {
-                    char toml_path[512];
-                    snprintf(toml_path, sizeof(toml_path), "%s/%s/package.toml", repo_path, entry->d_name);
-                    
-                    if (enhanced_search(argv[i], entry->d_name, toml_path)) {
-                        printf("%s\n", entry->d_name);
-                        parse_package_info(entry->d_name, toml_path);
-                        found_count++;
-                    }
-                }
-            }
-            
-            if (found_count == 0) {
-                printf("No packages found matching '%s'\n", argv[i]);
-            }
-            
-            printf("[ Applications found : %d ]\n", found_count);
-            
-            if (i < argc - 1) {
-                printf("\n");
-            }
-        }
-        
-        closedir(dir);
-        
-    } else {
-        printf("[ Using online repository ]\n\n");
-        
-        char packages[MAX_PACKAGES][MAX_PACKAGE_NAME];
-        int package_count = get_online_package_list(packages, MAX_PACKAGES);
-        
-        if (package_count == 0) {
-            printf("Error: Could not fetch package list from online repository\n");
-            return;
-        }
-        
-        // Display results for each search term
-        for (int i = 2; i < argc; i++) {
-            int found_count = 0;
-            
-            printf("[ Results for search key : %s ]\n", argv[i]);
-            printf("Searching...\n\n");
-            
-            for (int j = 0; j < package_count; j++) {
-                char *toml_content = get_online_package_toml(packages[j]);
+        // Search local repo (super fast like before)
+        while ((entry = readdir(dir)) != NULL) {
+            if (entry->d_type == DT_DIR && strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0) {
+                char toml_path[512];
+                snprintf(toml_path, sizeof(toml_path), "%s/%s/package.toml", repo_path, entry->d_name);
                 
-                if (enhanced_search_online(argv[i], packages[j], toml_content)) {
-                    printf("%s\n", packages[j]);
-                    parse_package_info_from_content(packages[j], toml_content);
+                if (enhanced_search(argv[i], entry->d_name, toml_path)) {
+                    printf("%s\n", entry->d_name);
+                    parse_package_info(entry->d_name, toml_path);
                     found_count++;
                 }
             }
+        }
+        
+        // If nothing found locally, quickly check online in background
+        if (found_count == 0) {
+            printf("No packages found matching '%s' in local repository\n", argv[i]);
             
-            if (found_count == 0) {
-                printf("No packages found matching '%s'\n", argv[i]);
-            }
-            
-            printf("[ Applications found : %d ]\n", found_count);
-            
-            if (i < argc - 1) {
-                printf("\n");
+            // Quick background check if available online
+            if (quick_online_package_exists(argv[i])) {
+                total_online_available++;
             }
         }
+        
+        printf("[ Applications found : %d ]\n", found_count);
+        
+        if (i < argc - 1) {
+            printf("\n");
+        }
     }
-} 
+    
+    closedir(dir);
+    
+    // Show professional orange notification if packages available online
+    if (total_online_available > 0) {
+        printf("\n\033[33m┌─────────────────────────────────────────────────────────────┐\033[0m\n");
+        printf("\033[33m│   Online packages available for your search terms!         │\033[0m\n");
+        printf("\033[33m│ Run 'uspm uu' to update your local repository               │\033[0m\n");
+        printf("\033[33m│ Or use 'uspm os <package>' to search online directly        │\033[0m\n");
+        printf("\033[33m└─────────────────────────────────────────────────────────────┘\033[0m\n");
+    }
+}

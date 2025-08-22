@@ -5,5 +5,7 @@ Usage:
   i [PACKAGE-NAME] - install a package
   r [PACKAGE-NAME] - remove a package
   u - update all packages
-  s [SEARCH-TERM1] [SEARCH-TERM2] ... - search for packages (supports multiple terms)
+  uu - update USPM itself (self-update from GitHub)
+  s [SEARCH-TERM1] [SEARCH-TERM2] ... - search local packages (fast)
+  os [SEARCH-TERM1] [SEARCH-TERM2] ... - search online packages (slower)
 "
