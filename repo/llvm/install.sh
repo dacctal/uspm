@@ -21,13 +21,17 @@ rm -rf $Sources
 git clone "$Clone" "$Sources"
 cd "$Sources"
 
-mkdir builddir
-cd builddir
+git checkout llvmorg-18.1.8
 
-cmake "$Sources"
-cmake --build .
-cmake -DCMAKE_INSTALL_PREFIX="$Sources"/bin -P cmake_install.cmake
-cmake --build . --target install
+mkdir build
+cd build
 
-cd -
-cd -
+cmake -G Ninja ../llvm \
+  -DLLVM_ENABLE_PROJECTS="clang;lld;lldb" \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_INSTALL_PREFIX="$Sources/binaries"
+
+ninja -j$(nproc)
+ninja install
+
+cp bin/* "$Bin"

@@ -26,5 +26,3 @@ cd "$Sources"
 make -j$(nproc)
 sudo make install
 cp bin/* "$Bin"
-
-cd -

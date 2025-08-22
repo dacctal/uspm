@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 void permInstallScript(int argc, char *argv[]) {
   for (int i = 2; argv[i] != NULL; i++) {
     size_t len = strlen("chmod +x ~/.local/share/uspm/repo/") + strlen(argv[i]) + strlen("/install.sh") + 1;

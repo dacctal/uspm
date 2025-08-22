@@ -18,5 +18,3 @@ cp uspm "$Bin"
 
 echo "Adding uspm to \$PATH..."
 echo PATH=$PATH:~/.local/share/uspm/bin/ >>~/.profile && source ~/.profile
-
-cd - || exit

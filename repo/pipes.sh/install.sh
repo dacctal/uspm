@@ -23,5 +23,3 @@ cd "$Sources" || exit
 
 make PREFIX=$Sources install
 cp pipes.sh ~/.local/share/uspm/bin/pipes.sh
-
-cd -

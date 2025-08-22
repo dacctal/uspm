@@ -27,5 +27,3 @@ make install
 
 cp python "$Bin"
 cp build/bin/* "$Bin"
-
-cd -

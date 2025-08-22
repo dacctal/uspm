@@ -29,6 +29,3 @@ cd make
 ./build.sh
 
 cp make "$Bin"
-
-cd -
-cd -

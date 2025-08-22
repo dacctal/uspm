@@ -28,5 +28,3 @@ make
 make install
 
 cp ./bin/gammastep* "$Bin"
-
-cd -

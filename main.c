@@ -3,8 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "scripting/permInstallScript.c"
-#include "scripting/runInstallScript.c"
+#include "scripting/installPkg.c"
 #include "scripting/permRemoveScript.c"
 #include "scripting/runRemoveScript.c"
 #include "scripting/searchScript.c"
@@ -20,8 +19,7 @@ int main(int argc, char *argv[]) {
   else {
 
     if(strcmp(argv[1], "i") == 0) {
-      permInstallScript(argc, argv);
-      runInstallScript(argc, argv);
+      installPkg(argc, argv);
     }
 
     else if(strcmp(argv[1], "r") == 0) {

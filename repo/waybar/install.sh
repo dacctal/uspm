@@ -37,8 +37,6 @@ Type=Application
 " >>"$Bin"/applications/"$Package".desktop
 chmod +x "$Bin"/applications/"$Package".desktop
 
-cd -
-
 mkdir -p ~/.local/share/applications
 ln -s ~/.local/share/uspm/bin/applications/"$Package".desktop \
   ~/.local/share/applications/

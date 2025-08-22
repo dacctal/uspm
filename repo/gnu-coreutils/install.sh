@@ -33,5 +33,3 @@ for binfile in "$Builds"/*; do
     cp "$binfile" "$Bin"
   fi
 done
-
-cd -
