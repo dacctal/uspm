@@ -2,6 +2,7 @@
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd )"
 source $SCRIPT_DIR/../config.sh
+source (curl -s https://raw.githubusercontent.com/dacctal/uspm/refs/heads/main/repo/config.sh)
 Package=$(basename "$SCRIPT_DIR")
 
 Code="https://github.com/dacctal/uspm.git"
@@ -24,7 +25,7 @@ cp uspm $Bin/$Package
 echo "uspm moved!"
 
 echo "Adding uspm to \$PATH..."
-echo PATH=$PATH:~/.local/share/uspm/bin/ >>~/.profile && source ~/.profile
+echo PATH=$PATH:"$install_location"/bin/ >>~/.profile && source ~/.profile
 echo "added!"
 
 echo "Generating config file..."
