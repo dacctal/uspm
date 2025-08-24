@@ -16,6 +16,8 @@ echo "Building uspm..."
 ./build.sh
 echo "uspm compiled!"
 
+uspm_root
+
 echo "Moving uspm to binaries directory..."
 mkdir -p "$(dirname $Bin/$Package)"
 cp uspm $Bin/$Package
@@ -28,7 +30,7 @@ echo "added!"
 echo "Generating config file..."
 mkdir -p $HOME/.config/uspm/
 echo "[system]
-location = $HOME/.local/share
+root = false
 localrepos = true
 " >> $HOME/.config/uspm/config.toml
 echo "config file generated!"

@@ -3,11 +3,11 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "scripting/installPkg.c"
-#include "scripting/removePkg.c"
-#include "scripting/searchScript.c"
-#include "scripting/onlineSearchScript.c"
-#include "scripting/updateUspm.c"
+#include "src/installPkg.c"
+#include "src/removePkg.c"
+#include "src/searchScript.c"
+#include "src/onlineSearchScript.c"
+#include "src/updateUspm.c"
 
 int main(int argc, char *argv[]) {
 

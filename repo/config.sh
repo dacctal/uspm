@@ -31,24 +31,26 @@ done <"$USPM_CONFIG"
 
 # - configure
 
-echo "Do you want to root uspm? [ EXPERIMENTAL] [y/n]"
-read isRootedPhantom
+uspm_root() {
+  echo "Do you want to root uspm? [ EXPERIMENTAL] [y/n]"
+  read isRootedPhantom
 
-if [ "$isRootedPhantom" = "y" ]; then
-  echo " Are you really sure you want to root uspm?  [y/n]"
-  read isRooted
-else
-  echo "uspm is not rooted"
-fi
+  if [ "$isRootedPhantom" = "y" ]; then
+    echo " Are you really sure you want to root uspm?  [y/n]"
+    read isRooted
+  else
+    echo "uspm is not rooted"
+  fi
 
-if [ "$isRooted" = "y" ]; then
-  system_root="true"
-else
-  system_root="false"
-fi
+  if [ "$isRooted" = "y" ]; then
+    system_root="true"
+  else
+    system_root="false"
+  fi
 
-echo "uspm config location: $USPM_CONFIG"
-echo "upsm installed to root: $system_root"
+  echo "uspm config location: $USPM_CONFIG"
+  echo "upsm installed to root: $system_root"
+}
 
 # - setup
 
