@@ -29,11 +29,11 @@ echo "added!"
 
 echo "Generating config file..."
 rm $USPM_CONFIG
-mkdir -p $USPM_CONFIG
+touch $USPM_CONFIG
 echo "[system]
 root = false
 localrepos = true
-" >> $HOME/.config/uspm/config.toml
+" >> $USPM_CONFIG
 echo "config file generated!"
 
 echo "uspm is installed!"
