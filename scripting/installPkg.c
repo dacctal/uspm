@@ -30,6 +30,7 @@ void installPkg(int argc, char *argv[]) {
         runInstallScript(argc, argv);
       }
       else {
+        closedir(repo);
         onlineInstall(argc, argv);
       }
 

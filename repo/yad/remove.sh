@@ -1,8 +1,10 @@
 #!/bin/sh
 
-Package="yad"
-Sources="$HOME/.local/share/uspm/sources/$Package"
-Bin="$HOME/.local/share/uspm/bin/$Package"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd )"
+source $SCRIPT_DIR/../config.sh
+source $SCRIPT_DIR/./builds.sh
 
-rm -rf "$Bin"
-rm -rf "$Sources"
+remove_package
+
+echo "
+$Package successfully removed!"

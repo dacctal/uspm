@@ -1,25 +1,19 @@
 #!/bin/sh
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd )"
+source $SCRIPT_DIR/../config.sh
+Package=$(basename "$SCRIPT_DIR")
+
 Dependencies=("")
+get_dependencies
 
-for Dep in ${Dependencies[@]}; do
-  if ! [ -f "$HOME/.local/share/uspm/bin/$Dep" ]; then
-    chmod +x ~/.local/share/uspm/repo/$Dep/install.sh
-    ~/.local/share/uspm/repo/$Dep/install.sh
-  else
-    echo "$Dep already installed"
-  fi
-done
-
-Package="moby"
-Sources="$HOME/.local/share/uspm/sources/$Package"
-Bin="$HOME/.local/share/uspm/bin/"
 Code="https://github.com/moby/moby"
 
-rm -rf $Sources
+rm -rf $Sources/$Package
+mkdir -p $Sources/$Package
 
-git clone $Code $Sources
-cd $Sources
+git clone "$Code" "$Sources/$Package"
+cd $Sources/$Package || exit
 
 mkdir -p bundles
 hack/make.sh binary
@@ -31,3 +25,5 @@ for binfile in "$Builds"/*; do
     cp "$binfile" "$Bin"
   fi
 done
+
+echo "Builds=$Builds" >> "$install_location"/repo/"$Package"/builds.sh

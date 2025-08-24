@@ -1,32 +1,32 @@
 #!/bin/sh
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd )"
+source $SCRIPT_DIR/../config.sh
+Package=$(basename "$SCRIPT_DIR")
+
 Dependencies=("ninja" "meson")
+get_dependencies
 
-for Dep in ${Dependencies[@]}; do
-  if ! [ -f "$HOME/.local/share/uspm/bin/$Dep" ]; then
-    chmod +x ~/.local/share/uspm/repo/$Dep/install.sh
-    ~/.local/share/uspm/repo/$Dep/install.sh
-  else
-    echo "$Dep already installed"
-  fi
-done
+Code="git://anongit.freedesktop.org/git/cairo"
+Code2="git://anongit.freedesktop.org/git/pixman.git"
 
-Package="cairo"
-Sources="$HOME/.local/share/uspm/sources/$Package"
-Bin="$HOME/.local/share/uspm/bin/"
-Clone="git://anongit.freedesktop.org/git/cairo"
-Clone2="git://anongit.freedesktop.org/git/pixman.git"
+rm -rf $Sources/$Package
+mkdir -p $Sources/$Package
 
-rm -rf "$Sources"
-
-git clone "$Clone" "$Sources"
-git clone "$Clone2" "$Sources"
+git clone "$Code" "$Sources/$Package"
+git clone "$Code2" "$Sources/$Package"
 cd "$Sources" || exit
 
-meson setup $Sources/build
-ninja -C $Sources/build
-ninja -C $Sources/build install
+Builds="$Sources/$Package/uspmbuilds"
+mkdir -p $Builds
+
+meson setup $Builds
+ninja -C $Builds
+ninja -C $Builds install
 mkdir -p "$(dirname "$Bin")"
 
+cp $Builds/* $Bin
 sudo cp /usr/local/bin/cairo-trace ~/.local/share/uspm/bin/
 sudo cp /usr/bin/cairo-trace ~/.local/share/uspm/bin/
+
+echo "Builds=$Builds" >> "$install_location"/repo/"$Package"/builds.sh

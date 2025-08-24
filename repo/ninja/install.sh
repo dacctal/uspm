@@ -1,29 +1,29 @@
 #!/bin/sh
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd )"
+source $SCRIPT_DIR/../config.sh
+Package=$(basename "$SCRIPT_DIR")
+
 Dependencies=("python")
+get_dependencies
 
-for Dep in ${Dependencies[@]}; do
-  if ! [ -f "$HOME/.local/share/uspm/bin/$Dep" ]; then
-    chmod +x ~/.local/share/uspm/repo/$Dep/install.sh
-    ~/.local/share/uspm/repo/$Dep/install.sh
-  else
-    echo "$Dep already installed"
-  fi
-done
+Code="https://github.com/ninja-build/ninja.git"
 
-Package="ninja"
-Sources="$HOME/.local/share/uspm/sources/$Package"
-Bin="$HOME/.local/share/uspm/bin/"
-Clone="https://github.com/ninja-build/ninja.git"
+rm -rf $Sources/$Package
+mkdir -p $Sources/$Package
 
-rm -rf "$Sources"
+git clone "$Code" "$Sources/$Package"
+cd $Sources/$Package || exit
 
-git clone "$Clone" "$Sources"
-cd "$Sources"
+Builds="$Sources/$Package/uspmbuilds"
+mkdir -p $Builds
 
 git checkout release
 cat README.md
 python3 configure.py
 cmake -Bbuild-cmake -DBUILD_TESTING=OFF
-cmake --build build-cmake
-cp build-cmake/ninja "$Bin"
+cmake --build "$Builds"
+
+cp "$Builds"/ninja "$Bin"
+
+echo "Builds=$Builds" >> "$install_location"/repo/"$Package"/builds.sh

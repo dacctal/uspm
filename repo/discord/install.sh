@@ -1,57 +1,36 @@
 #!/bin/sh
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd )"
+source $SCRIPT_DIR/../config.sh
+Package=$(basename "$SCRIPT_DIR")
+
 Dependencies=("curl")
+get_dependencies
 
-for Dep in ${Dependencies[@]}; do
-  if ! [ -f "$HOME/.local/share/uspm/bin/$Dep" ]; then
-    chmod +x ~/.local/share/uspm/repo/$Dep/install.sh
-    ~/.local/share/uspm/repo/$Dep/install.sh
-  else
-    echo "$Dep already installed"
-  fi
-done
+rm -rf $Sources/$Package
 
-Package="discord"
-Sources="$HOME/.local/share/uspm/sources/$Package"
-Bin="$HOME/.local/share/uspm/bin/"
+mkdir -p $Sources/$Package
+mkdir -p "$Bin"/applications
+cd $Sources/$Package || exit
+
+Builds="$Sources/$Package/uspmbuilds"
+mkdir -p "$Builds"
+
+curl -L "https://discord.com/api/download?platform=linux&format=tar.gz" -o discord.tar.gz
+tar -xvzf discord.tar.gz
+
+cp "$Sources"/"$Package"/Discord/Discord "$Builds"
+
 App="$Bin"/applications/"$Package".desktop
 Appln="$HOME/.local/share/applications/$Package.desktop"
 
-rm -rf "$Sources"
-rm "$Appln"
-rm "$App"
+app_name="discord"
+app_comment="Discord chat client"
+app_exec_location="$Sources"/"$Package"/Discord/Discord
+app_terminal="false"
+app_type="Application"
+app_categories="Network;Chat;"
 
-mkdir -p "$Sources"
-mkdir -p "$Bin"/applications
-cd "$Sources"
-curl -L "https://discord.com/api/download?platform=linux&format=tar.gz" -o discord.tar.gz
+make_app
 
-tar -xvzf discord.tar.gz
-
-echo "[Desktop Entry]
-Name=Discord
-Comment=Discord chat client
-Exec="$HOME"/.local/share/uspm/sources/discord/Discord/Discord
-Terminal=false
-Type=Application
-Categories=Network;Chat;
-" >>"$Bin"/applications/"$Package".desktop
-chmod +x "$Bin"/applications/"$Package".desktop
-
-mkdir -p ~/.local/share/applications
-ln -s ~/.local/share/uspm/bin/applications/"$Package".desktop \
-  ~/.local/share/applications/
-
-echo "
---- IMPORTANT ---
-
-This app's .desktop file is
-installed in a custom location.
-
-To make your app launcher
-recognize this location, you
-need to add the following
-into ~/.profile
-
-export XDG_DATA_DIRS="\$XDG_DATA_DIRS:\$HOME/.local/share/uspm/bin/"
-"
+echo "Builds=$Builds" >> "$install_location"/repo/"$Package"/builds.sh

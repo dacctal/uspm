@@ -1,31 +1,28 @@
 #!/bin/sh
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd )"
+source $SCRIPT_DIR/../config.sh
+Package=$(basename "$SCRIPT_DIR")
+
 Dependencies=("gnu-coreutils")
+get_dependencies
 
-for Dep in ${Dependencies[@]}; do
-  if ! [ -f "$HOME/.local/share/uspm/bin/$Dep" ]; then
-    chmod +x ~/.local/share/uspm/repo/$Dep/install.sh
-    ~/.local/share/uspm/repo/$Dep/install.sh
-  else
-    echo "$Dep already installed"
-  fi
-done
+Code="https://ftp.gnu.org/gnu/make/make-4.4.1.tar.gz"
 
-Package="make"
-Sources="$HOME/.local/share/uspm/sources/$Package"
-Bin="$HOME/.local/share/uspm/bin/"
+rm -rf $Sources/$Package
+mkdir -p $Sources/$Package
 
-rm -rf "$Sources"
+cd "$Sources/$Package"
+wget "$Code"
 
-mkdir "$Sources"
-cd "$Sources"
-wget https://ftp.gnu.org/gnu/make/make-4.4.1.tar.gz
-
-mkdir make
-tar -xvzf make*.tar.gz -C make --strip-components=1
-cd make
+Builds="$Sources/$Package/uspmbuilds"
+mkdir -p $Builds
+tar -xvzf make*.tar.gz -C "$Builds" --strip-components=1
+cd $Builds
 
 ./configure
 ./build.sh
 
 cp make "$Bin"
+
+echo "Builds=$Builds" >> "$install_location"/repo/"$Package"/builds.sh

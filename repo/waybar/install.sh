@@ -1,56 +1,52 @@
 #!/bin/sh
 
-Dependencies=("meson" "ninja")
+# get all the variables and config files
+# -- !! don't change this !! --
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd )"
+source $SCRIPT_DIR/../config.sh
+Package=$(basename "$SCRIPT_DIR")
 
-for Dep in ${Dependencies[@]}; do
-  if ! [ -f "$HOME/.local/share/uspm/bin/$Dep" ]; then
-    chmod +x ~/.local/share/uspm/repo/$Dep/install.sh
-    ~/.local/share/uspm/repo/$Dep/install.sh
-  else
-    echo "$Dep already installed"
-  fi
-done
+# determine and install all dependencies for this package
+# -- !! make sure all dependencies are in the repos !! --
+Dependencies=("make")
+get_dependencies
 
-Package="waybar"
-Sources="$HOME/.local/share/uspm/sources/$Package"
-Bin="$HOME/.local/share/uspm/bin/"
-Clone="https://github.com/Alexays/Waybar"
+# define the code source URL
+Code="https://github.com/pipeseroni/pipes.sh.git"
 
-rm -rf "$Sources"
-rm "$Appln"
-rm "$App"
+# make a home for the source code
+# -- !! in the $Sources/$Package directory !! --
+rm -rf $Sources/$Package
+mkdir -p $Sources/$Package
 
-git clone "$Clone" "$Sources"
-cd "$Sources"
+# put the source code in its home
+# -- !! in the $Sources/$Package directory !! --
+git clone "$Code" "$Sources/$Package"
+cd $Sources/$Package || exit
 
-meson setup build
-ninja -C build
+# specify builds directory
+Builds="$Sources/$Package/uspmbuilds"
+mkdir -p $Builds
 
-cp build/waybar "$Bin"
+# compile the binaries
+make PREFIX=$Builds install
+cp pipes.sh $Builds
 
-echo "[Desktop Entry]
-Name=Waybar
-Comment=Wayland status bar
-Exec="$Sources/build/waybar"
-Terminal=false
-Type=Application
-" >>"$Bin"/applications/"$Package".desktop
-chmod +x "$Bin"/applications/"$Package".desktop
+# put all newly compiled binaries in $Bin
+cp $Builds/* $Bin
 
-mkdir -p ~/.local/share/applications
-ln -s ~/.local/share/uspm/bin/applications/"$Package".desktop \
-  ~/.local/share/applications/
+# make the app's .desktop description
+# -- !! only do this if it's an app, not just a cli program !! --
+app_name="$Package"
+app_comment="Wayland status bar"
+app_exec_location="$Sources"/"$Package"/build/waybar
+app_terminal="false"
+app_type="Application"
+app_categories="Status Bar;"
 
-echo "
---- IMPORTANT ---
+# make the app
+# -- !! only do this if it's an app, not just a cli program !! --
+make_app
 
-This app's .desktop file is
-installed in a custom location.
-
-To make your app launcher
-recognize this location, you
-need to add the following
-into ~/.profile
-
-export XDG_DATA_DIRS="\$XDG_DATA_DIRS:\$HOME/.local/share/uspm/bin/"
-"
+# make a builds.sh file for the remove.sh script to source
+echo "Builds=$Builds" >> "$install_location"/repo/"$Package"/builds.sh

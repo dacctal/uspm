@@ -1,15 +1,10 @@
 #!/bin/sh
 
-Package="docker"
-Sources="$HOME/.local/share/uspm/sources/$Package"
-Bin="$HOME/.local/share/uspm/bin/"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd )"
+source $SCRIPT_DIR/../config.sh
+source $SCRIPT_DIR/./builds.sh
 
-Builds="$Sources/bin"
+remove_package
 
-for binfile in "$Builds"/*; do
-  if [ -f "$binfile" ]; then
-    rm "$Bin"/"$(basename "$binfile")"
-  fi
-done
-
-rm -rf $Sources
+echo "
+$Package successfully removed!"

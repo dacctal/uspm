@@ -1,64 +1,44 @@
 #!/bin/sh
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd )"
+source $SCRIPT_DIR/../config.sh
+Package=$(basename "$SCRIPT_DIR")
+
 Dependencies=("meson" "ninja")
+get_dependencies
 
-for Dep in ${Dependencies[@]}; do
-  if ! [ -f "$HOME/.local/share/uspm/bin/$Dep" ]; then
-    chmod +x ~/.local/share/uspm/repo/$Dep/install.sh
-    ~/.local/share/uspm/repo/$Dep/install.sh
-  else
-    echo "$Dep already installed"
-  fi
-done
+Code="https://codeberg.org/dnkl/foot.git"
 
-Package="foot"
-Sources="$HOME/.local/share/uspm/sources/$Package"
-Bin="$HOME/.local/share/uspm/bin/"
-Clone="https://codeberg.org/dnkl/foot.git"
+rm -rf $Sources/$Package
+mkdir -p $Sources/$Package
 
-sudo rm -rf "$Sources"
-rm "$Appln"
-rm "$App"
+git clone "$Code" "$Sources/$Package"
+cd $Sources/$Package || exit
 
-git clone "$Clone" "$Sources"
-cd "$Sources"
-
-mkdir -p bld/release && cd bld/release
+Builds="$Sources/$Package/uspmbuilds"
+mkdir -p $Builds
+cd $Builds
 
 export CFLAGS="$CFLAGS -O3"
-meson --prefix="$Sources"/bld/release \
+meson --prefix="$Builds" \
   --buildtype=release \
-  -Dcustom-terminfo-install-location="$Sources"/terminfo \
-  ../..
+  -Dcustom-terminfo-install-location="$Sources"/"$Package"/terminfo \
+  ..
 ninja
 ninja install
 
-cp bin/* "$Bin"
+cp $Builds/* $Bin
 
-echo "[Desktop Entry]
-Name=Foot
-Comment=Foo Terminal
-Exec=/home/dacc/.local/share/uspm/bin/foot
-Terminal=false
-Type=Application
-Categories=Terminal;
-" >>"$Bin"/applications/"$Package".desktop
-chmod +x "$Bin"/applications/"$Package".desktop
+App="$Bin"/applications/"$Package".desktop
+Appln="$HOME/.local/share/applications/$Package.desktop"
 
-mkdir -p ~/.local/share/applications
-ln -s ~/.local/share/uspm/bin/applications/"$Package".desktop \
-  ~/.local/share/applications/
+app_name="foot"
+app_comment="Foo Terminal"
+app_exec_location="$Bin"/"$Package"
+app_terminal="false"
+app_type="Application"
+app_categories="Terminal;"
 
-echo "
---- IMPORTANT ---
+make_app
 
-This app's .desktop file is
-installed in a custom location.
-
-To make your app launcher
-recognize this location, you
-need to add the following
-into ~/.profile
-
-export XDG_DATA_DIRS="\$XDG_DATA_DIRS:\$HOME/.local/share/uspm/bin/"
-"
+echo "Builds=$Builds" >> "$install_location"/repo/"$Package"/builds.sh

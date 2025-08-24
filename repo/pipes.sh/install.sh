@@ -1,25 +1,39 @@
 #!/bin/sh
 
+# get all the variables and config files
+# -- !! don't change this !! --
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd )"
+source $SCRIPT_DIR/../config.sh
+Package=$(basename "$SCRIPT_DIR")
+
+# determine and install all dependencies for this package
+# -- !! make sure all dependencies are in the repos !! --
 Dependencies=("make")
+get_dependencies
 
-for Dep in ${Dependencies[@]}; do
-  if ! [ -f "$HOME/.local/share/uspm/bin/$Dep" ]; then
-    chmod +x ~/.local/share/uspm/repo/$Dep/install.sh
-    ~/.local/share/uspm/repo/$Dep/install.sh
-  else
-    echo "$Dep already installed"
-  fi
-done
+# define the code source URL
+Code="https://github.com/pipeseroni/pipes.sh.git"
 
-Package="pipes.sh"
-Sources="$HOME/.local/share/uspm/sources/$Package"
-Bin="$HOME/.local/share/uspm/bin/"
-Clone="https://github.com/pipeseroni/pipes.sh.git"
+# make a home for the source code
+# -- !! in the $Sources/$Package directory !! --
+rm -rf $Sources/$Package
+mkdir -p $Sources/$Package
 
-rm -rf $Sources
+# put the source code in its home
+# -- !! in the $Sources/$Package directory !! --
+git clone "$Code" "$Sources/$Package"
+cd $Sources/$Package || exit
 
-git clone "$Clone" "$Sources"
-cd "$Sources" || exit
+# specify builds directory
+Builds="$Sources/$Package/uspmbuilds"
+mkdir -p $Builds
 
-make PREFIX=$Sources install
-cp pipes.sh ~/.local/share/uspm/bin/pipes.sh
+# compile the binaries
+make PREFIX=$Builds install
+cp pipes.sh $Builds
+
+# put all newly compiled binaries in $Bin
+cp $Builds/* $Bin
+
+# make a builds.sh file for the remove.sh script to source
+echo "Builds=$Builds" >> "$install_location"/repo/"$Package"/builds.sh

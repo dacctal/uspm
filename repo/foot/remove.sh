@@ -1,12 +1,10 @@
 #!/bin/sh
 
-Package="foot"
-Sources="$HOME/.local/share/uspm/sources/$Package"
-Bin="$HOME/.local/share/uspm/bin/$Package"
-App="$HOME/.local/share/uspm/bin/applications/$Package.desktop"
-Appln="$HOME/.local/share/applications/$Package.desktop"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd )"
+source $SCRIPT_DIR/../config.sh
+source $SCRIPT_DIR/./builds.sh
 
-sudo rm -rf "$Sources"
-sudo rm -rf "$Bin"
-rm "$App"
-rm "$Appln"
+remove_package
+
+echo "
+$Package successfully removed!"

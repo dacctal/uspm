@@ -1,20 +1,36 @@
 #!/bin/sh
 
-Package="uspm"
-Sources="$HOME/.local/share/uspm/sources/$Package"
-Bin="$HOME/.local/share/uspm/bin/"
-Clone="https://github.com/dacctal/uspm.git"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd )"
+source $SCRIPT_DIR/../config.sh
+Package=$(basename "$SCRIPT_DIR")
 
-rm -rf "$Sources"
+Code="https://github.com/dacctal/uspm.git"
 
-git clone "$Clone" "$Sources"
-cd "$Sources" || exit
+rm -rf $Sources/$Package
+mkdir -p $Sources/$Package
+
+git clone $Code $Sources/$Package
+cd $Sources/$Package || exit
 
 echo "Building uspm..."
 ./build.sh
-echo "Installing uspm..."
-mkdir -p "$(dirname "$Bin")"
-cp uspm "$Bin"
+echo "uspm compiled!"
+
+echo "Moving uspm to binaries directory..."
+mkdir -p "$(dirname $Bin/$Package)"
+cp uspm $Bin/$Package
+echo "uspm moved!"
 
 echo "Adding uspm to \$PATH..."
 echo PATH=$PATH:~/.local/share/uspm/bin/ >>~/.profile && source ~/.profile
+echo "added!"
+
+echo "Generating config file..."
+mkdir -p $HOME/.config/uspm/
+echo "[system]
+location = $HOME/.local/share
+localrepos = true
+" >> $HOME/.config/uspm/config.toml
+echo "config file generated!"
+
+echo "uspm is installed!"

@@ -1,11 +1,10 @@
 #!/bin/sh
 
-Package="python"
-Sources="$HOME/.local/share/uspm/sources/$Package"
-Bin="$HOME/.local/share/uspm/bin/"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd )"
+source $SCRIPT_DIR/../config.sh
+source $SCRIPT_DIR/./builds.sh
 
-rm -rf "$Bin"/idle*
-rm -rf "$Bin"/python*
-rm -rf "$Bin"/pydoc*
-rm -rf "$Bin"/pip*
-rm -rf "$Sources"
+remove_package
+
+echo "
+$Package successfully removed!"

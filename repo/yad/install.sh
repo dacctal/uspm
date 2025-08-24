@@ -1,30 +1,30 @@
 #!/bin/sh
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd )"
+source $SCRIPT_DIR/../config.sh
+Package=$(basename "$SCRIPT_DIR")
+
 Dependencies=("make")
+get_dependencies
 
-for Dep in ${Dependencies[@]}; do
-  if ! [ -f "$HOME/.local/share/uspm/bin/$Dep" ]; then
-    chmod +x ~/.local/share/uspm/repo/$Dep/install.sh
-    ~/.local/share/uspm/repo/$Dep/install.sh
-  else
-    echo "$Dep already installed"
-  fi
-done
+Code="https://github.com/v1cont/yad.git"
 
-Package="yad"
-Sources="$HOME/.local/share/uspm/sources/$Package"
-Bin="$HOME/.local/share/uspm/bin/"
-Clone="https://github.com/v1cont/yad.git"
+rm -rf $Sources/$Package
+mkdir -p $Sources/$Package
 
-rm -rf "$Sources"
+git clone "$Code" "$Sources/$Package"
+cd $Sources/$Package || exit
 
-git clone "$Clone" "$Sources"
-cd "$Sources"
+Builds="$Sources/$Package/uspmbuilds"
+mkdir -p $Builds
 
 autoreconf -ivf intltoolize
 ./configure
 make
-sudo make PREFIX="$Sources" install
+sudo make PREFIX="$Builds" install
 gtk-update-icon-cache
 
-sudo mv /usr/local/bin/yad* "$Bin"
+sudo cp /usr/local/bin/yad* "$Bin"
+sudo cp /usr/local/bin/yad* "$Builds"
+
+echo "Builds=$Builds" >> "$install_location"/repo/"$Package"/builds.sh

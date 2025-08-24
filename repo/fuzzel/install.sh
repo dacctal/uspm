@@ -1,60 +1,42 @@
 #!/bin/sh
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd )"
+source $SCRIPT_DIR/../config.sh
+Package=$(basename "$SCRIPT_DIR")
+
 Dependencies=("ninja" "meson")
+get_dependencies
 
-for Dep in ${Dependencies[@]}; do
-  if ! [ -f "$HOME/.local/share/uspm/bin/$Dep" ]; then
-    chmod +x ~/.local/share/uspm/repo/$Dep/install.sh
-    ~/.local/share/uspm/repo/$Dep/install.sh
-  else
-    echo "$Dep already installed"
-  fi
-done
+Code="https://codeberg.org/dnkl/fuzzel.git"
 
-Package="fuzzel"
-Sources="$HOME/.local/share/uspm/sources/$Package"
-Bin="$HOME/.local/share/uspm/bin/"
-Clone="https://codeberg.org/dnkl/fuzzel.git"
+rm -rf $Sources/$Package
+mkdir -p $Sources/$Package
 
-rm -rf "$Sources"
-rm "$Appln"
-rm "$App"
+git clone "$Code" "$Sources/$Package"
+cd $Sources/$Package || exit
 
-git clone "$Clone" "$Sources"
-cd "$Sources"
 
-mkdir -p bld/release && cd bld/release
-meson --buildtype=release --prefix="$Sources" \
+Builds="$Sources/$Package/uspmbuilds"
+mkdir -p $Builds
+cd $Builds
+
+meson --buildtype=release --prefix="$Builds" \
   ../..
 ninja
 ninja install
 
-cp fuzzel "$Bin"
+cp $Builds/* $Bin
 
-echo "[Desktop Entry]
-Name=Fuzzel
-Comment=Fuzzel app launcher
-Exec=/home/dacc/.local/share/uspm/bin/fuzzel
-Terminal=false
-Type=Application
-Categories=App Launcher;
-" >>"$Bin"/applications/"$Package".desktop
-chmod +x "$Bin"/applications/"$Package".desktop
+App="$Bin"/applications/"$Package".desktop
+Appln="$HOME/.local/share/applications/$Package.desktop"
 
-mkdir -p ~/.local/share/applications
-ln -s ~/.local/share/uspm/bin/applications/"$Package".desktop \
-  ~/.local/share/applications/
+app_name="fuzzel"
+app_comment="Fuzzel app launcher"
+app_exec_location="$Bin"/"$Package"
+app_terminal="false"
+app_type="Application"
+app_categories="App Launcher;"
 
-echo "
---- IMPORTANT ---
+make_app
 
-This app's .desktop file is
-installed in a custom location.
-
-To make your app launcher
-recognize this location, you
-need to add the following
-into ~/.profile
-
-export XDG_DATA_DIRS="\$XDG_DATA_DIRS:\$HOME/.local/share/uspm/bin/"
-"
+echo "Builds=$Builds" >> "$install_location"/repo/"$Package"/builds.sh

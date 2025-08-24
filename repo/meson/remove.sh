@@ -1,8 +1,10 @@
 #!/bin/sh
 
-Package="meson"
-Sources="$HOME/.local/share/uspm/sources/$Package"
-Bin="$HOME/.local/share/uspm/bin"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd )"
+source $SCRIPT_DIR/../config.sh
+source $SCRIPT_DIR/./builds.sh
 
-sudo rm -rf "$Bin"/meson
-sudo rm -rf "$Sources"
+remove_package
+
+echo "
+$Package successfully removed!"

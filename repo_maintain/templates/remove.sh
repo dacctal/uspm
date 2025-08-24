@@ -1,25 +1,10 @@
 #!/bin/sh
 
-#-- Copy package name from parent directory --#
-#
-Package="templates"
-#
-#-- Copy package name from parent directory --#
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd )"
+source $SCRIPT_DIR/../config.sh
+source $SCRIPT_DIR/./builds.sh
 
-#-- Do not touch --#
-#
-Sources="$HOME/.local/share/uspm/sources/$Package"
-Bin="$HOME/.local/share/uspm/bin/$Package"
-App="$HOME/.local/share/uspm/bin/applications/$Package.desktop"
-Appln="$HOME/.local/share/applications/$Package.desktop"
-#
-#-- Do not touch --#
+remove_package
 
-#-- delete every binary & source file --#
-#
-sudo rm -rf "$Sources"
-sudo rm "$Bin"
-rm "$App"
-rm "$Appln"
-#
-#-- don't leave anything behind except config files --#
+echo "
+$Package successfully removed!"
