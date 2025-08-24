@@ -28,7 +28,8 @@ echo PATH=$PATH:~/.local/share/uspm/bin/ >>~/.profile && source ~/.profile
 echo "added!"
 
 echo "Generating config file..."
-mkdir -p $HOME/.config/uspm/
+rm $USPM_CONFIG
+mkdir -p $USPM_CONFIG
 echo "[system]
 root = false
 localrepos = true
