@@ -1,11 +1,11 @@
 #!/bin/sh
 
 # - define config.toml
-
+USPM_CONFIG_DIR=$HOME/.config/uspm
 USPM_CONFIG=$HOME/.config/uspm/config.toml
+mkdir -p $USPM_CONFIG_DIR
 
 # - read config.toml
-
 section=""
 while IFS='=' read -r key value; do
   # section headers
@@ -30,7 +30,6 @@ while IFS='=' read -r key value; do
 done <"$USPM_CONFIG"
 
 # - configure
-
 uspm_root() {
   echo "Do you want to root uspm? [ EXPERIMENTAL] [y/n]"
   read isRootedPhantom
@@ -53,7 +52,6 @@ uspm_root() {
 }
 
 # - setup
-
 if [ "$system_root" = "true" ]; then
   install_location="/usr/share/uspm"
   echo "using sudo, you may need to enter your password"
@@ -92,13 +90,11 @@ else
 fi
 
 # - vars
-
 Sources="$install_location/sources"
 Bin="$install_location/bin"
 App="$Bin"/applications/"$app_name".desktop
 
 # - funcs
-
 get_dependencies() {
   for Dep in ${Dependencies[@]}; do
     if ! [ -f "$Bin/$Dep" ]; then
