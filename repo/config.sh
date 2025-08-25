@@ -58,6 +58,7 @@ if [ "$system_root" = "true" ]; then
   install_location="/usr/share/uspm"
   echo "using sudo, you may need to enter your password"
   sudo mkdir -p $install_location
+  Appln="/usr/share/applications/$app_name.desktop"
   echo "uspm is rooted: $install_location"
   USPM_CONFIG="$install_location"/.config/config.toml
   sudo mkdir -p $install_location/.config
@@ -65,6 +66,7 @@ if [ "$system_root" = "true" ]; then
 elif [ "$system_root" = "false" ]; then
   install_location="$HOME/.local/share/uspm"
   mkdir -p $install_location
+  Appln="$HOME/.local/share/applications/$app_name.desktop"
   echo "uspm is in userspace: $install_location"
   USPM_CONFIG=$install_location/.config/uspm/config.toml
   echo "uspm is using local config: $USPM_CONFIG"
@@ -72,6 +74,8 @@ else
   echo "config file is written incorrectly.
   defaulting to userspace."
   install_location="$HOME/.local/share/uspm"
+  mkdir -p $install_location
+  Appln="$HOME/.local/share/applications/$app_name.desktop"
   echo "uspm is in userspace: $install_location"
   USPM_CONFIG=$install_location/config.toml
   echo "uspm is using local config: $USPM_CONFIG"
@@ -91,6 +95,7 @@ fi
 
 Sources="$install_location/sources"
 Bin="$install_location/bin"
+App="$Bin"/applications/"$app_name".desktop
 
 # - funcs
 
@@ -118,8 +123,6 @@ remove_package() {
 }
 
 make_app() {
-  App="$Bin"/applications/"$app_name".desktop
-  Appln="$HOME/.local/share/applications/$app_name.desktop"
   rm "$Appln"
   rm "$App"
 
@@ -151,5 +154,3 @@ make_app() {
   export XDG_DATA_DIRS="\$XDG_DATA_DIRS:\$HOME/.local/share/uspm/bin/"
   "
 }
-App="$Bin"/applications/"$app_name".desktop
-Appln="$HOME/.local/share/applications/$app_name.desktop"

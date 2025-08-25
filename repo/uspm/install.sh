@@ -25,7 +25,7 @@ cp uspm $Bin/$Package
 echo "uspm moved!"
 
 echo "Adding uspm to \$PATH..."
-echo PATH=$PATH:"$install_location"/bin/ >>~/.profile && source ~/.profile
+echo PATH=\$PATH:"$install_location"/bin/ >>~/.profile && source ~/.profile
 echo "added!"
 
 echo "Generating config file..."
