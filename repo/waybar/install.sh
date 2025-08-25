@@ -13,7 +13,7 @@ Dependencies=("make")
 get_dependencies
 
 # define the code source URL
-Code="https://github.com/pipeseroni/pipes.sh.git"
+Code="https://github.com/Alexays/Waybar"
 
 # make a home for the source code
 # -- !! in the $Sources/$Package directory !! --
@@ -30,8 +30,9 @@ Builds="$Sources/$Package/uspmbuilds"
 mkdir -p $Builds
 
 # compile the binaries
-make PREFIX=$Builds install
-cp pipes.sh $Builds
+meson setup build
+ninja -C build
+cp ./build/waybar "$Builds"
 
 # put all newly compiled binaries in $Bin
 cp $Builds/* $Bin
