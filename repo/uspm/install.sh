@@ -4,6 +4,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd )"
 source <(curl -s https://raw.githubusercontent.com/dacctal/uspm/refs/heads/main/repo/config.sh)
 Package=$(basename "$SCRIPT_DIR")
 
+Dependencies=("curl")
+get_dependencies
+
 Code="https://github.com/dacctal/uspm.git"
 
 rm -rf $Sources/$Package
