@@ -124,12 +124,12 @@ make_app() {
   rm "$App"
 
   echo "[Desktop Entry]
-    Name=$app_name
-    Comment=$app_comment
-    Exec=$app_exec_location
-    Terminal=$app_terminal
-    Type=$app_type
-    Categories=$app_categories
+  Name=$app_name
+  Comment=$app_comment
+  Exec=$app_exec_location
+  Terminal=$app_terminal
+  Type=$app_type
+  Categories=$app_categories
   " >> "$App"
   chmod +x "$App"
 

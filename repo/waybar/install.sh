@@ -9,7 +9,7 @@ Package=$(basename "$SCRIPT_DIR")
 
 # determine and install all dependencies for this package
 # -- !! make sure all dependencies are in the repos !! --
-Dependencies=("make")
+Dependencies=("ninja" "meson")
 get_dependencies
 
 # define the code source URL
