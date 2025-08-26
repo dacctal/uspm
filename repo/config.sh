@@ -2,8 +2,8 @@
 
 # - define config.toml
 USPM_CONFIG_DIR=$HOME/.config/uspm
-USPM_CONFIG=$HOME/.config/uspm/config.toml
-mkdir -p $USPM_CONFIG_DIR
+USPM_CONFIG="$USPM_CONFIG_DIR"/config.toml
+mkdir -p "$USPM_CONFIG_DIR"
 
 # - read config.toml
 section=""
@@ -119,6 +119,7 @@ remove_package() {
 }
 
 make_app() {
+  App="$Bin"/applications/"$app_name".desktop
   rm "$Appln"
   rm "$App"
 
